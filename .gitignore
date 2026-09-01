@@ -1,0 +1,7 @@
+target/ 
+*.class 
+*.db 
+.vscode/ 
+.idea/ 
+src/Main/java/LimparBanco.java 
+src/Main/java/TesteBanco.java 
