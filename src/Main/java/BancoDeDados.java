@@ -27,7 +27,7 @@ public class BancoDeDados {
 
     public static void criarTabela() {
 
-        String sql = """
+        String sqlGastos = """
                 CREATE TABLE IF NOT EXISTS gastos (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     descricao TEXT NOT NULL,
@@ -35,16 +35,24 @@ public class BancoDeDados {
                 )
                 """;
 
+        String sqlOrcamento = """
+                CREATE TABLE IF NOT EXISTS orcamento (
+                    id INTEGER PRIMARY KEY,
+                    valor REAL NOT NULL
+                )
+                """;
+
         try (Connection conexao = conectar();
-             Statement statement = conexao.createStatement()) {
+            Statement statement = conexao.createStatement()) {
 
-            statement.execute(sql);
+            statement.execute(sqlGastos);
+            statement.execute(sqlOrcamento);
 
-            System.out.println("Tabela gastos criada com sucesso!");
+            System.out.println("Tabelas criadas com sucesso!");
 
         } catch (Exception e) {
 
-            System.out.println("Erro ao criar tabela.");
+            System.out.println("Erro ao criar tabelas.");
             e.printStackTrace();
         }
     }

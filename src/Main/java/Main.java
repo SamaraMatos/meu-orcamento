@@ -8,11 +8,43 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         GastoDAO gastoDAO = new GastoDAO();
+        OrcamentoDAO orcamentoDAO = new OrcamentoDAO();
+
+        BancoDeDados.criarTabela();
 
         System.out.println("===== MEU ORÇAMENTO =====");
 
-        System.out.print("Digite quanto você tem disponível para este mês: R$ ");
-        double valorOrcamento = scanner.nextDouble();
+        Double valorSalvo = orcamentoDAO.buscar();
+
+        double valorOrcamento;
+
+        if (valorSalvo == null) {
+
+            do {
+
+                System.out.print("Digite quanto você tem disponível para este mês: R$ ");
+                valorOrcamento = scanner.nextDouble();
+
+                if (valorOrcamento <= 0) {
+
+                    System.out.println(
+                        "O orçamento deve ser maior que zero."
+                    );
+                }
+
+            } while (valorOrcamento <= 0);
+
+            orcamentoDAO.salvar(valorOrcamento);
+
+        } else {
+
+            valorOrcamento = valorSalvo;
+
+            System.out.println(
+                "Orçamento carregado: R$ "
+                + valorOrcamento
+            );
+        }
 
         Orcamento meuOrcamento = new Orcamento(valorOrcamento);
 
@@ -24,7 +56,7 @@ public class Main {
 
         int opcao = 0;
 
-        while (opcao != 6) {
+        while (opcao != 7) {
 
             System.out.println();
             System.out.println("===== MENU =====");
@@ -33,7 +65,8 @@ public class Main {
             System.out.println("3 - Ver saldo");
             System.out.println("4 - Editar gasto");
             System.out.println("5 - Excluir gasto");
-            System.out.println("6 - Sair");
+            System.out.println("6 - Alterar orçamento");
+            System.out.println("7 - Sair");
 
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
@@ -47,20 +80,37 @@ public class Main {
                     System.out.print("Digite a descrição do gasto: ");
                     String descricao = scanner.nextLine();
 
-                    System.out.print("Digite o valor do gasto: R$ ");
-                    double valor = scanner.nextDouble();
+                    if (descricao.trim().isEmpty()) {
 
-                    if (valor <= 0) {
-
-                        System.out.println("O valor deve ser maior que zero.");
+                        System.out.println(
+                            "A descrição não pode ficar vazia."
+                        );
 
                     } else {
 
-                        Gasto gasto = new Gasto(descricao, valor);
+                        System.out.print(
+                            "Digite o valor do gasto: R$ "
+                        );
 
-                        gastoDAO.salvar(gasto);
+                        double valor = scanner.nextDouble();
 
-                        System.out.println("Gasto adicionado com sucesso!");
+                        if (valor <= 0) {
+
+                            System.out.println(
+                                "O valor deve ser maior que zero."
+                            );
+
+                        } else {
+
+                            Gasto gasto =
+                                new Gasto(descricao, valor);
+
+                            gastoDAO.salvar(gasto);
+
+                            System.out.println(
+                                "Gasto adicionado com sucesso!"
+                            );
+                        }
                     }
 
                     break;
@@ -68,13 +118,18 @@ public class Main {
                 case 2:
 
                     System.out.println();
-                    System.out.println("===== GASTOS CADASTRADOS =====");
+                    System.out.println(
+                        "===== GASTOS CADASTRADOS ====="
+                    );
 
-                    ArrayList<Gasto> gastos = gastoDAO.buscarTodos();
+                    ArrayList<Gasto> gastos =
+                        gastoDAO.buscarTodos();
 
                     if (gastos.isEmpty()) {
 
-                        System.out.println("Nenhum gasto cadastrado.");
+                        System.out.println(
+                            "Nenhum gasto cadastrado."
+                        );
 
                     } else {
 
@@ -94,16 +149,21 @@ public class Main {
 
                 case 3:
 
-                    ArrayList<Gasto> gastosAtualizados = gastoDAO.buscarTodos();
+                    ArrayList<Gasto> gastosAtualizados =
+                        gastoDAO.buscarTodos();
 
                     Orcamento orcamentoAtualizado =
-                        new Orcamento(meuOrcamento.getValor());
+                        new Orcamento(valorOrcamento);
 
                     for (Gasto gastoAtual : gastosAtualizados) {
-                        orcamentoAtualizado.adicionarGasto(gastoAtual);
+
+                        orcamentoAtualizado.adicionarGasto(
+                            gastoAtual
+                        );
                     }
 
-                    double saldo = orcamentoAtualizado.calcularSaldo();
+                    double saldo =
+                        orcamentoAtualizado.calcularSaldo();
 
                     System.out.println();
                     System.out.println("===== SALDO =====");
@@ -140,6 +200,7 @@ public class Main {
                     } else {
 
                         System.out.println();
+
                         System.out.println(
                             "✅ Você ainda possui saldo disponível."
                         );
@@ -150,14 +211,18 @@ public class Main {
                 case 4:
 
                     System.out.println();
-                    System.out.println("===== EDITAR GASTO =====");
+                    System.out.println(
+                        "===== EDITAR GASTO ====="
+                    );
 
                     ArrayList<Gasto> gastosEditar =
                         gastoDAO.buscarTodos();
 
                     if (gastosEditar.isEmpty()) {
 
-                        System.out.println("Nenhum gasto cadastrado.");
+                        System.out.println(
+                            "Nenhum gasto cadastrado."
+                        );
 
                     } else {
 
@@ -193,7 +258,9 @@ public class Main {
 
                         if (gastoSelecionado == null) {
 
-                            System.out.println("Gasto não encontrado.");
+                            System.out.println(
+                                "Gasto não encontrado."
+                            );
 
                         } else {
 
@@ -204,35 +271,44 @@ public class Main {
                             String novaDescricao =
                                 scanner.nextLine();
 
-                            System.out.print(
-                                "Digite o novo valor: R$ "
-                            );
-
-                            double novoValor =
-                                scanner.nextDouble();
-
-                            if (novoValor <= 0) {
+                            if (novaDescricao.trim().isEmpty()) {
 
                                 System.out.println(
-                                    "O valor deve ser maior que zero."
+                                    "A descrição não pode ficar vazia."
                                 );
 
                             } else {
 
-                                Gasto gastoEditado =
-                                    new Gasto(
-                                        idEditar,
-                                        novaDescricao,
-                                        novoValor
+                                System.out.print(
+                                    "Digite o novo valor: R$ "
+                                );
+
+                                double novoValor =
+                                    scanner.nextDouble();
+
+                                if (novoValor <= 0) {
+
+                                    System.out.println(
+                                        "O valor deve ser maior que zero."
                                     );
 
-                                gastoDAO.atualizar(
-                                    gastoEditado
-                                );
+                                } else {
 
-                                System.out.println(
-                                    "Gasto editado com sucesso!"
-                                );
+                                    Gasto gastoEditado =
+                                        new Gasto(
+                                            idEditar,
+                                            novaDescricao,
+                                            novoValor
+                                        );
+
+                                    gastoDAO.atualizar(
+                                        gastoEditado
+                                    );
+
+                                    System.out.println(
+                                        "Gasto editado com sucesso!"
+                                    );
+                                }
                             }
                         }
                     }
@@ -242,14 +318,18 @@ public class Main {
                 case 5:
 
                     System.out.println();
-                    System.out.println("===== EXCLUIR GASTO =====");
+                    System.out.println(
+                        "===== EXCLUIR GASTO ====="
+                    );
 
                     ArrayList<Gasto> gastosExcluir =
                         gastoDAO.buscarTodos();
 
                     if (gastosExcluir.isEmpty()) {
 
-                        System.out.println("Nenhum gasto cadastrado.");
+                        System.out.println(
+                            "Nenhum gasto cadastrado."
+                        );
 
                     } else {
 
@@ -268,13 +348,15 @@ public class Main {
                             "Digite o ID do gasto que deseja excluir: "
                         );
 
-                        int idExcluir = scanner.nextInt();
+                        int idExcluir =
+                            scanner.nextInt();
 
                         boolean gastoExiste = false;
 
                         for (Gasto gastoAtual : gastosExcluir) {
 
                             if (gastoAtual.getId() == idExcluir) {
+
                                 gastoExiste = true;
                                 break;
                             }
@@ -302,6 +384,50 @@ public class Main {
 
                     System.out.println();
                     System.out.println(
+                        "===== ALTERAR ORÇAMENTO ====="
+                    );
+
+                    double novoOrcamento;
+
+                    do {
+
+                        System.out.print(
+                            "Digite o novo valor do orçamento: R$ "
+                        );
+
+                        novoOrcamento =
+                            scanner.nextDouble();
+
+                        if (novoOrcamento <= 0) {
+
+                            System.out.println(
+                                "O orçamento deve ser maior que zero."
+                            );
+                        }
+
+                    } while (novoOrcamento <= 0);
+
+                    orcamentoDAO.salvar(
+                        novoOrcamento
+                    );
+
+                    valorOrcamento =
+                        novoOrcamento;
+
+                    meuOrcamento =
+                        new Orcamento(valorOrcamento);
+
+                    System.out.println(
+                        "Orçamento alterado com sucesso!"
+                    );
+
+                    break;
+
+                case 7:
+
+                    System.out.println();
+
+                    System.out.println(
                         "Encerrando o programa..."
                     );
 
@@ -309,7 +435,9 @@ public class Main {
 
                 default:
 
-                    System.out.println("Opção inválida.");
+                    System.out.println(
+                        "Opção inválida."
+                    );
             }
         }
 
