@@ -1,9 +1,10 @@
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
+        
 
         Scanner scanner = new Scanner(System.in);
 
@@ -22,7 +23,10 @@ public class Main {
 
             do {
 
-                System.out.print("Digite quanto você tem disponível para este mês: R$ ");
+                System.out.print(
+                    "Digite quanto você tem disponível para este mês: R$ "
+                );
+
                 valorOrcamento = scanner.nextDouble();
 
                 if (valorOrcamento <= 0) {
@@ -46,11 +50,14 @@ public class Main {
             );
         }
 
-        Orcamento meuOrcamento = new Orcamento(valorOrcamento);
+        Orcamento meuOrcamento =
+            new Orcamento(valorOrcamento);
 
-        ArrayList<Gasto> gastosDoBanco = gastoDAO.buscarTodos();
+        ArrayList<Gasto> gastosDoBanco =
+            gastoDAO.buscarTodos();
 
         for (Gasto gasto : gastosDoBanco) {
+
             meuOrcamento.adicionarGasto(gasto);
         }
 
@@ -69,6 +76,7 @@ public class Main {
             System.out.println("7 - Sair");
 
             System.out.print("Escolha uma opção: ");
+
             opcao = scanner.nextInt();
 
             switch (opcao) {
@@ -77,8 +85,12 @@ public class Main {
 
                     scanner.nextLine();
 
-                    System.out.print("Digite a descrição do gasto: ");
-                    String descricao = scanner.nextLine();
+                    System.out.print(
+                        "Digite a descrição do gasto: "
+                    );
+
+                    String descricao =
+                        scanner.nextLine();
 
                     if (descricao.trim().isEmpty()) {
 
@@ -92,7 +104,8 @@ public class Main {
                             "Digite o valor do gasto: R$ "
                         );
 
-                        double valor = scanner.nextDouble();
+                        double valor =
+                            scanner.nextDouble();
 
                         if (valor <= 0) {
 
@@ -103,13 +116,26 @@ public class Main {
                         } else {
 
                             Gasto gasto =
-                                new Gasto(descricao, valor);
+                                new Gasto(
+                                    descricao,
+                                    valor
+                                );
 
-                            gastoDAO.salvar(gasto);
+                            boolean salvo =
+                                gastoDAO.salvar(gasto);
 
-                            System.out.println(
-                                "Gasto adicionado com sucesso!"
-                            );
+                            if (salvo) {
+
+                                System.out.println(
+                                    "Gasto adicionado com sucesso!"
+                                );
+
+                            } else {
+
+                                System.out.println(
+                                    "Não foi possível adicionar o gasto."
+                                );
+                            }
                         }
                     }
 
@@ -118,6 +144,7 @@ public class Main {
                 case 2:
 
                     System.out.println();
+
                     System.out.println(
                         "===== GASTOS CADASTRADOS ====="
                     );
@@ -136,7 +163,8 @@ public class Main {
                         for (Gasto gastoAtual : gastos) {
 
                             System.out.println(
-                                "ID: " + gastoAtual.getId()
+                                "ID: "
+                                + gastoAtual.getId()
                                 + " - "
                                 + gastoAtual.getDescricao()
                                 + " - R$ "
@@ -153,29 +181,39 @@ public class Main {
                         gastoDAO.buscarTodos();
 
                     Orcamento orcamentoAtualizado =
-                        new Orcamento(valorOrcamento);
-
-                    for (Gasto gastoAtual : gastosAtualizados) {
-
-                        orcamentoAtualizado.adicionarGasto(
-                            gastoAtual
+                        new Orcamento(
+                            valorOrcamento
                         );
+
+                    for (Gasto gastoAtual :
+                            gastosAtualizados) {
+
+                        orcamentoAtualizado
+                            .adicionarGasto(
+                                gastoAtual
+                            );
                     }
 
                     double saldo =
-                        orcamentoAtualizado.calcularSaldo();
+                        orcamentoAtualizado
+                            .calcularSaldo();
 
                     System.out.println();
-                    System.out.println("===== SALDO =====");
+
+                    System.out.println(
+                        "===== SALDO ====="
+                    );
 
                     System.out.println(
                         "Orçamento: R$ "
-                        + orcamentoAtualizado.getValor()
+                        + orcamentoAtualizado
+                            .getValor()
                     );
 
                     System.out.println(
                         "Total gasto: R$ "
-                        + orcamentoAtualizado.calcularTotalGastos()
+                        + orcamentoAtualizado
+                            .calcularTotalGastos()
                     );
 
                     System.out.println(
@@ -186,7 +224,9 @@ public class Main {
                     if (saldo < 0) {
 
                         System.out.println();
-                        System.out.println("⚠️ ATENÇÃO!");
+                        System.out.println(
+                            "⚠️ ATENÇÃO!"
+                        );
 
                         System.out.println(
                             "Você ultrapassou seu orçamento."
@@ -211,6 +251,7 @@ public class Main {
                 case 4:
 
                     System.out.println();
+
                     System.out.println(
                         "===== EDITAR GASTO ====="
                     );
@@ -226,10 +267,12 @@ public class Main {
 
                     } else {
 
-                        for (Gasto gastoAtual : gastosEditar) {
+                        for (Gasto gastoAtual :
+                                gastosEditar) {
 
                             System.out.println(
-                                "ID: " + gastoAtual.getId()
+                                "ID: "
+                                + gastoAtual.getId()
                                 + " - "
                                 + gastoAtual.getDescricao()
                                 + " - R$ "
@@ -241,17 +284,23 @@ public class Main {
                             "Digite o ID do gasto que deseja editar: "
                         );
 
-                        int idEditar = scanner.nextInt();
+                        int idEditar =
+                            scanner.nextInt();
 
                         scanner.nextLine();
 
-                        Gasto gastoSelecionado = null;
+                        Gasto gastoSelecionado =
+                            null;
 
-                        for (Gasto gastoAtual : gastosEditar) {
+                        for (Gasto gastoAtual :
+                                gastosEditar) {
 
-                            if (gastoAtual.getId() == idEditar) {
+                            if (gastoAtual.getId()
+                                    == idEditar) {
 
-                                gastoSelecionado = gastoAtual;
+                                gastoSelecionado =
+                                    gastoAtual;
+
                                 break;
                             }
                         }
@@ -271,7 +320,9 @@ public class Main {
                             String novaDescricao =
                                 scanner.nextLine();
 
-                            if (novaDescricao.trim().isEmpty()) {
+                            if (novaDescricao
+                                    .trim()
+                                    .isEmpty()) {
 
                                 System.out.println(
                                     "A descrição não pode ficar vazia."
@@ -318,6 +369,7 @@ public class Main {
                 case 5:
 
                     System.out.println();
+
                     System.out.println(
                         "===== EXCLUIR GASTO ====="
                     );
@@ -333,10 +385,12 @@ public class Main {
 
                     } else {
 
-                        for (Gasto gastoAtual : gastosExcluir) {
+                        for (Gasto gastoAtual :
+                                gastosExcluir) {
 
                             System.out.println(
-                                "ID: " + gastoAtual.getId()
+                                "ID: "
+                                + gastoAtual.getId()
                                 + " - "
                                 + gastoAtual.getDescricao()
                                 + " - R$ "
@@ -351,11 +405,14 @@ public class Main {
                         int idExcluir =
                             scanner.nextInt();
 
-                        boolean gastoExiste = false;
+                        boolean gastoExiste =
+                            false;
 
-                        for (Gasto gastoAtual : gastosExcluir) {
+                        for (Gasto gastoAtual :
+                                gastosExcluir) {
 
-                            if (gastoAtual.getId() == idExcluir) {
+                            if (gastoAtual.getId()
+                                    == idExcluir) {
 
                                 gastoExiste = true;
                                 break;
@@ -364,7 +421,9 @@ public class Main {
 
                         if (gastoExiste) {
 
-                            gastoDAO.excluir(idExcluir);
+                            gastoDAO.excluir(
+                                idExcluir
+                            );
 
                             System.out.println(
                                 "Gasto excluído com sucesso!"
@@ -383,6 +442,7 @@ public class Main {
                 case 6:
 
                     System.out.println();
+
                     System.out.println(
                         "===== ALTERAR ORÇAMENTO ====="
                     );
@@ -415,7 +475,9 @@ public class Main {
                         novoOrcamento;
 
                     meuOrcamento =
-                        new Orcamento(valorOrcamento);
+                        new Orcamento(
+                            valorOrcamento
+                        );
 
                     System.out.println(
                         "Orçamento alterado com sucesso!"

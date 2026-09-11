@@ -5,26 +5,30 @@ import java.util.ArrayList;
 
 public class GastoDAO {
 
-    public void salvar(Gasto gasto) {
+public boolean salvar(Gasto gasto) {
 
-        String sql = "INSERT INTO gastos (descricao, valor) VALUES (?, ?)";
+    String sql = "INSERT INTO gastos (descricao, valor) VALUES (?, ?)";
 
-        try (Connection conexao = BancoDeDados.conectar();
-            PreparedStatement comando = conexao.prepareStatement(sql)) {
+    try (Connection conexao = BancoDeDados.conectar();
+        PreparedStatement comando = conexao.prepareStatement(sql)) {
 
-            comando.setString(1, gasto.getDescricao());
-            comando.setDouble(2, gasto.getValor());
+        comando.setString(1, gasto.getDescricao());
+        comando.setDouble(2, gasto.getValor());
 
-            comando.executeUpdate();
+        comando.executeUpdate();
 
-            System.out.println("Gasto salvo no banco!");
+        System.out.println("Gasto salvo no banco!");
 
-        } catch (Exception e) {
+        return true;
 
-            System.out.println("Erro ao salvar gasto.");
-            e.printStackTrace();
-        }
+    } catch (Exception e) {
+
+        System.out.println("Erro ao salvar gasto.");
+        e.printStackTrace();
+
+        return false;
     }
+}
 
     public ArrayList<Gasto> buscarTodos() {
 

@@ -8,9 +8,11 @@ public class BancoDeDados {
 
     public static Connection conectar() {
 
-        try {
+    try {
 
-            Connection conexao = DriverManager.getConnection(URL);
+        Class.forName("org.sqlite.JDBC");
+
+        Connection conexao = DriverManager.getConnection(URL);
 
             System.out.println("Banco de dados conectado!");
 
