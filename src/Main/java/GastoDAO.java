@@ -59,28 +59,59 @@ public boolean salvar(Gasto gasto) {
 
         return gastos;
     }
-public void atualizar(Gasto gasto) {
+public boolean atualizar(Gasto gasto) {
 
-    String sql = "UPDATE gastos SET descricao = ?, valor = ? WHERE id = ?";
+    String sql =
+            "UPDATE gastos SET descricao = ?, valor = ? WHERE id = ?";
 
     try (Connection conexao = BancoDeDados.conectar();
         PreparedStatement comando = conexao.prepareStatement(sql)) {
 
-        comando.setString(1, gasto.getDescricao());
-        comando.setDouble(2, gasto.getValor());
-        comando.setInt(3, gasto.getId());
+        comando.setString(
+                1,
+                gasto.getDescricao()
+        );
 
-        comando.executeUpdate();
+        comando.setDouble(
+                2,
+                gasto.getValor()
+        );
 
-        System.out.println("Gasto atualizado no banco!");
+        comando.setInt(
+                3,
+                gasto.getId()
+        );
+
+        int linhasAfetadas =
+                comando.executeUpdate();
+
+        if (linhasAfetadas > 0) {
+
+            System.out.println(
+                    "Gasto atualizado no banco!"
+            );
+
+            return true;
+        }
+
+        System.out.println(
+                "Nenhum gasto encontrado com esse ID."
+        );
+
+        return false;
 
     } catch (Exception e) {
 
-        System.out.println("Erro ao atualizar gasto.");
+        System.out.println(
+                "Erro ao atualizar gasto."
+        );
+
         e.printStackTrace();
+
+        return false;
     }
 }
-public void excluir(int id) {
+public boolean excluir(int id) {
 
     String sql = "DELETE FROM gastos WHERE id = ?";
 
@@ -89,13 +120,59 @@ public void excluir(int id) {
 
         comando.setInt(1, id);
 
-        comando.executeUpdate();
+        int linhasAfetadas =
+                comando.executeUpdate();
 
-        System.out.println("Gasto excluído do banco!");
+        if (linhasAfetadas > 0) {
+
+            System.out.println(
+                    "Gasto excluído do banco!"
+            );
+
+            return true;
+        }
+
+        System.out.println(
+                "Nenhum gasto encontrado com esse ID."
+        );
+
+        return false;
 
     } catch (Exception e) {
 
-        System.out.println("Erro ao excluir gasto.");
+        System.out.println(
+                "Erro ao excluir gasto."
+        );
+
         e.printStackTrace();
+
+        return false;
     }
-}}
+}
+public boolean excluirTodos() {
+
+    String sql = "DELETE FROM gastos";
+
+    try (Connection conexao = BancoDeDados.conectar();
+        PreparedStatement comando = conexao.prepareStatement(sql)) {
+
+        comando.executeUpdate();
+
+        System.out.println(
+                "Gastos atuais removidos com sucesso!"
+        );
+
+        return true;
+
+    } catch (Exception e) {
+
+        System.out.println(
+                "Erro ao remover gastos atuais."
+        );
+
+        e.printStackTrace();
+
+        return false;
+    }
+}
+}
