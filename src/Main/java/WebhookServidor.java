@@ -51,9 +51,17 @@ public static void main(String[] args) throws IOException {
                 controleMesDAO.salvar("2026-09");
         }
 
+        String portaEnv =
+                System.getenv("PORT");
+
+        int porta =
+                portaEnv != null
+                        ? Integer.parseInt(portaEnv)
+                        : 8080;
+
         HttpServer servidor =
                 HttpServer.create(
-                        new InetSocketAddress(8080),
+                        new InetSocketAddress(porta),
                         0
                 );
 
@@ -65,7 +73,9 @@ public static void main(String[] args) throws IOException {
         servidor.start();
 
         System.out.println(
-                "Webhook iniciado em http://localhost:8080/webhook"
+                "Webhook iniciado na porta "
+                + porta
+                + "/webhook"
         );
 }
 
