@@ -4,21 +4,21 @@ import java.sql.Statement;
 
 public class BancoDeDados {
 
-    private static final String DATABASE_URL =
-            System.getenv("DATABASE_URL");
+private static final String DATABASE_URL =
+        System.getenv("DATABASE_URL");
 
 public static Connection conectar() {
 
-    try {
+        try {
 
         if (DATABASE_URL == null
                 || DATABASE_URL.isBlank()) {
 
-            System.out.println(
-                    "DATABASE_URL não encontrada."
-            );
+        System.out.println(
+                "DATABASE_URL não encontrada."
+        );
 
-            return null;
+        return null;
         }
 
         java.net.URI uri =
@@ -122,6 +122,13 @@ public static void criarTabela() {
                 )
                 """;
 
+        String sqlMensagensProcessadas = """
+        CREATE TABLE IF NOT EXISTS mensagens_processadas (
+            message_id TEXT PRIMARY KEY,
+            processada_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        """;
+
         try (Connection conexao = conectar();
             Statement statement =
                     conexao.createStatement()) {
@@ -131,7 +138,7 @@ public static void criarTabela() {
             statement.execute(sqlHistoricoGastos);
             statement.execute(sqlHistoricoOrcamentos);
             statement.execute(sqlControleMes);
-
+            statement.execute(sqlMensagensProcessadas);
             System.out.println(
                     "Tabelas criadas com sucesso!"
             );

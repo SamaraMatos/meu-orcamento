@@ -190,6 +190,9 @@ private static void processarMensagem(
         String numeroRemetente =
                 extrairRemetente(corpo);
 
+        String idMensagem =
+        extrairIdMensagem(corpo);
+
         if (mensagem == null || mensagem.isBlank()) {
 
         System.out.println();
@@ -208,6 +211,31 @@ private static void processarMensagem(
         );
 
         return;
+        }
+
+        if (idMensagem != null) {
+
+        MensagemProcessadaDAO mensagemDAO =
+                new MensagemProcessadaDAO();
+
+        boolean mensagemNova =
+                mensagemDAO.registrarSeNova(idMensagem);
+
+        if (!mensagemNova) {
+
+                System.out.println(
+                        "Mensagem já processada. Ignorando duplicata: "
+                        + idMensagem
+                );
+
+                enviarResposta(
+                        exchange,
+                        200,
+                        "EVENT_RECEIVED"
+                );
+
+                return;
+        }
         }
 
         System.out.println();
@@ -280,12 +308,6 @@ private static void processarMensagem(
                 numeroRemetente
         );
 
-        } else if (mensagem.toLowerCase().startsWith("orcamento ")) {
-
-        processarOrcamento(
-                mensagem,
-                numeroRemetente
-        );
         } else if (mensagem.toLowerCase().startsWith("orcamento ")) {
 
         processarOrcamento(
@@ -474,6 +496,39 @@ private static String extrairMensagem(
 
         return converterUnicode(mensagem);
 }
+
+private static String extrairIdMensagem(String corpo) {
+
+        int inicioMessages =
+                corpo.indexOf("\"messages\":[");
+
+        if (inicioMessages == -1) {
+                return null;
+        }
+
+        String marcador = "\"id\":\"";
+
+        int inicio =
+                corpo.indexOf(
+                        marcador,
+                        inicioMessages
+                );
+
+        if (inicio == -1) {
+                return null;
+        }
+
+        inicio += marcador.length();
+
+        int fim =
+                corpo.indexOf("\"", inicio);
+
+        if (fim == -1) {
+                return null;
+        }
+
+        return corpo.substring(inicio, fim);
+        }
 
 private static String converterUnicode(
                 String texto
