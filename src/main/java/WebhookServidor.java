@@ -8,6 +8,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 
 public class WebhookServidor {
 
@@ -213,6 +214,9 @@ private static void processarMensagem(
         return;
         }
 
+        String mensagemNormalizada =
+        normalizarComando(mensagem);
+
         if (idMensagem != null) {
 
         MensagemProcessadaDAO mensagemDAO =
@@ -249,7 +253,7 @@ private static void processarMensagem(
         );
         }
 
-        if (mensagem.equalsIgnoreCase("saldo")) {
+        if (mensagemNormalizada.equals("saldo")) { 
 
         String respostaSaldo =
                 obterSaldo();
@@ -272,7 +276,7 @@ private static void processarMensagem(
                 );
         }
 
-        } else if (mensagem.equalsIgnoreCase("gastos")) {
+        } else if (mensagemNormalizada.equals("gastos")) {
 
         String respostaGastos =
                 listarGastos();
@@ -288,27 +292,27 @@ private static void processarMensagem(
                 );
         }
 
-        } else if (mensagem.toLowerCase().startsWith("excluir ")) {
+        } else if (mensagemNormalizada.startsWith("excluir ")) {
 
         processarExclusao(
                 mensagem,
                 numeroRemetente
         );
 
-        } else if (mensagem.toLowerCase().startsWith("editar ")) {
+        } else if (mensagemNormalizada.startsWith("editar ")) {
 
         processarEdicao(
                 mensagem,
                 numeroRemetente
         );
-        } else if (mensagem.toLowerCase().startsWith("novo mes ")) {
+        } else if (mensagemNormalizada.startsWith("novo mes ")) {
 
         processarNovoMes(
                 mensagem,
                 numeroRemetente
         );
 
-        } else if (mensagem.toLowerCase().startsWith("orcamento ")) {
+        } else if (mensagemNormalizada.startsWith("orcamento ")) {
 
         processarOrcamento(
                 mensagem,
@@ -528,6 +532,17 @@ private static String extrairIdMensagem(String corpo) {
         }
 
         return corpo.substring(inicio, fim);
+        }
+
+private static String normalizarComando(String texto) {
+
+        return Normalizer.normalize(
+                texto,
+                Normalizer.Form.NFD
+        )
+        .replaceAll("\\p{M}", "")
+        .toLowerCase()
+        .trim();
         }
 
 private static String converterUnicode(
