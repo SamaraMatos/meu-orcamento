@@ -9,6 +9,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
+import java.util.List;
 
 public class WebhookServidor {
 
@@ -291,7 +292,18 @@ private static void processarMensagem(
                         respostaGastos
                 );
         }
+        } else if (mensagemNormalizada.equals("resumo")) {
 
+        String respostaResumo =
+                obterResumo();
+
+        if (numeroRemetente != null) {
+
+                enviarMensagemWhatsApp(
+                        numeroRemetente,
+                        respostaResumo
+                );
+        }
         } else if (mensagemNormalizada.startsWith("excluir ")) {
 
         processarExclusao(
@@ -1015,6 +1027,88 @@ private static String listarGastos() {
 
         return resposta;
 }
+
+private static String obterResumo() {
+        OrcamentoDAO orcamentoDAO =
+                new OrcamentoDAO();
+
+        Double valorOrcamento =
+                orcamentoDAO.buscar();
+
+        GastoDAO gastoDAO =
+                new GastoDAO();
+
+        List<Gasto> gastos =
+                gastoDAO.buscarTodos();
+        
+        int quantidadeGastos =
+        gastos.size();
+
+        double totalGastos = 0;
+
+        for (Gasto gasto : gastos) {
+        totalGastos += gasto.getValor();
+        }
+        
+        double mediaGastos;
+                if (quantidadeGastos > 0) {
+                mediaGastos = totalGastos / quantidadeGastos;
+                } else {
+                mediaGastos = 0;
+                }
+        
+        Gasto maiorGasto = null;
+        for (Gasto gasto : gastos) {
+                if (maiorGasto == null || gasto.getValor() > maiorGasto.getValor()) {
+                maiorGasto = gasto;
+        }
+        }
+
+        double orcamentoAtual;
+        if (valorOrcamento != null) {
+                orcamentoAtual = valorOrcamento;
+        } else {
+                orcamentoAtual = 0;
+        }
+
+        double saldo = orcamentoAtual - totalGastos;
+
+        String resposta = (
+                "Resumo do mês\n\n"
+        );
+        resposta += String.format("Orçamento: R$ %.2f\n",
+        orcamentoAtual);
+        resposta += String.format("Total de gastos: R$ %.2f\n",
+        totalGastos);
+        resposta += String.format("Quantidade de gastos: %d\n",
+        quantidadeGastos);
+        resposta += String.format("Média de gastos: R$ %.2f\n",
+        mediaGastos);
+                if (maiorGasto != null) {
+                resposta += String.format(
+                        "Maior gasto: ID %d - %s - R$ %.2f\n",
+                        maiorGasto.getId(),
+                        maiorGasto.getDescricao(),
+                        maiorGasto.getValor()
+                );
+                } else {
+                resposta += "Maior gasto: Nenhum gasto registrado.\n";
+                }
+                                if (saldo >= 0){
+                resposta += "Saldo disponível: R$ "
+                        + String.format("%.2f", saldo);
+                } else {
+                resposta += "⚠️ Orçamento ultrapassado em R$ "
+                        + String.format("%.2f", Math.abs(saldo));
+                }
+                
+                
+        return resposta;
+        }
+        
+
+
+
 
 private static String obterSaldo() {
 
