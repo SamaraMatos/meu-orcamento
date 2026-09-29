@@ -304,7 +304,19 @@ private static void processarMensagem(
                         respostaResumo
                 );
         }
-        } else if (mensagemNormalizada.startsWith("excluir ")) {
+
+        } else if (mensagemNormalizada.equals("menu")) {
+        String respostaMenu =
+                obterMenu();
+        if (numeroRemetente != null) {
+
+                enviarMensagemWhatsApp(
+                        numeroRemetente,
+                        respostaMenu
+                );
+        }
+        
+        }else if (mensagemNormalizada.startsWith("excluir ")) {
 
         processarExclusao(
                 mensagem,
@@ -1105,6 +1117,21 @@ private static String obterResumo() {
                 
         return resposta;
         }
+
+
+private static String obterMenu() {
+        String resposta = "Meu Orcamento\n\n";
+        resposta += "saldo - Ver saldo atual\n";
+        resposta += "gastos - Listar todos os gastos\n";
+        resposta += "resumo - Obter resumo do mês\n";
+        resposta += "menu - Exibir este menu\n";
+        resposta += "excluir <ID> - Excluir gasto pelo ID\n";
+        resposta += "editar <ID> <nova descrição> <novo valor> - Editar gasto pelo ID\n";
+        resposta += "novo mes <novo orçamento> - Iniciar novo mês\n";
+        resposta += "orcamento <novo valor> - Alterar orçamento atual\n";
+
+        return resposta;
+}
         
 
 
