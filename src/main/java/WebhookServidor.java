@@ -1121,14 +1121,27 @@ private static String obterResumo() {
 
 private static String obterMenu() {
         String resposta = "Meu Orcamento\n\n";
-        resposta += "saldo - Ver saldo atual\n";
-        resposta += "gastos - Listar todos os gastos\n";
-        resposta += "resumo - Obter resumo do mês\n";
-        resposta += "menu - Exibir este menu\n";
-        resposta += "excluir <ID> - Excluir gasto pelo ID\n";
-        resposta += "editar <ID> <nova descrição> <novo valor> - Editar gasto pelo ID\n";
-        resposta += "novo mes <novo orçamento> - Iniciar novo mês\n";
-        resposta += "orcamento <novo valor> - Alterar orçamento atual\n";
+        resposta += "Para adicionar um gasto, envie uma mensagem com a descrição e o valor separados por espaço.\n";
+        resposta += "Exemplo: Compras 150.50\n\n";
+        resposta += "CONSULTAS\n\n";
+        resposta += "Saldo\n";
+        resposta += "Ver saldo atual\n\n";
+        resposta += "Gastos\n";
+        resposta += "Listar todos os gastos\n\n";
+        resposta += "Resumo\n";
+        resposta += "Obter resumo do mês\n\n";
+        resposta += "ALTERAÇÕES\n\n";
+        resposta += "Excluir <ID>\n";
+        resposta += "Ex: excluir 26\n\n";
+        resposta += "Editar <ID> <nova descrição> <novo valor>\n";
+        resposta += "Ex: editar 26 compras 500\n\n";
+        resposta += "Novo mes <novo orçamento>\n";
+        resposta += "Ex: novo mes 1000\n\n";
+        resposta += "Orcamento <novo valor>\n";
+        resposta += "Ex: orcamento 1500\n\n";
+        resposta += "AJUDA\n\n";
+        resposta += "Menu\n";
+        resposta += "Exibir este menu\n";      
 
         return resposta;
 }
