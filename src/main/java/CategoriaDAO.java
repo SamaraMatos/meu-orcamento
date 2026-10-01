@@ -68,5 +68,28 @@ public List<Categoria> buscarTodos() {
     return categorias;
 }
 
+public boolean salvar(Categoria categoria) {
+
+    String sql = "INSERT INTO categorias (nome) VALUES (?)";
+
+    try (Connection conexao = BancoDeDados.conectar();
+        PreparedStatement comando = conexao.prepareStatement(sql)) {
+
+        comando.setString(1, categoria.getNome());
+
+        comando.executeUpdate();
+
+        System.out.println("Categoria salva no banco!");
+
+        return true;
+
+    } catch (Exception e) {
+
+        System.out.println("Erro ao salvar categoria.");
+        e.printStackTrace();
+
+        return false;
+    }
+}
 }
 
