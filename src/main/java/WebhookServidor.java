@@ -342,8 +342,19 @@ private static void processarMensagem(
                 mensagem,
                 numeroRemetente
         );
+        } else if (mensagemNormalizada.equals("categorias")) {
 
-        } else {
+        String respostaCategorias =
+                listarCategorias();
+
+        if (numeroRemetente != null) {
+
+                enviarMensagemWhatsApp(
+                        numeroRemetente,
+                        respostaCategorias
+                );
+        }
+        }else {
 
         processarGasto(
                 mensagem,
@@ -1078,6 +1089,26 @@ private static String listarGastos() {
         }
 
         return resposta;
+}
+
+private static String listarCategorias() {
+        CategoriaDAO categoriaDAO =
+                new CategoriaDAO();
+        List<Categoria> categorias =
+                categoriaDAO.buscarTodos();
+        String resposta = "CATEGORIAS\n\n";
+        for (Categoria categoria : categorias) {
+                resposta +=
+                        "ID: "
+                        + categoria.getId()
+                        + " - "
+                        + categoria.getNome()
+                        + "\n";
+
+        }
+        return resposta;
+
+
 }
 
 private static String obterResumo() {
