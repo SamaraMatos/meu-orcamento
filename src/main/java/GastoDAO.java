@@ -7,13 +7,14 @@ public class GastoDAO {
 
 public boolean salvar(Gasto gasto) {
 
-    String sql = "INSERT INTO gastos (descricao, valor) VALUES (?, ?)";
+    String sql = "INSERT INTO gastos (descricao, valor, categoria_id) VALUES (?, ?, ?)";
 
     try (Connection conexao = BancoDeDados.conectar();
         PreparedStatement comando = conexao.prepareStatement(sql)) {
 
         comando.setString(1, gasto.getDescricao());
         comando.setDouble(2, gasto.getValor());
+        comando.setInt(3, gasto.getCategoria().getId());
 
         comando.executeUpdate();
 
@@ -34,7 +35,16 @@ public boolean salvar(Gasto gasto) {
 
         ArrayList<Gasto> gastos = new ArrayList<>();
 
-        String sql = "SELECT id, descricao, valor FROM gastos";
+        String sql = """
+        SELECT g.id,
+                g.descricao,
+                g.valor,
+                c.id AS categoria_id,
+                c.nome AS categoria_nome
+            FROM gastos g
+            JOIN categorias c
+            ON g.categoria_id = c.id
+            """;
 
         try (Connection conexao = BancoDeDados.conectar();
             PreparedStatement comando = conexao.prepareStatement(sql);
@@ -45,8 +55,13 @@ public boolean salvar(Gasto gasto) {
                 int id = resultado.getInt("id");
                 String descricao = resultado.getString("descricao");
                 double valor = resultado.getDouble("valor");
+                
+                int categoriaId = resultado.getInt("categoria_id");
+                String categoriaNome = resultado.getString("categoria_nome");
 
-                Gasto gasto = new Gasto(id, descricao, valor);
+                Categoria categoria = new Categoria(categoriaId, categoriaNome);
+
+                Gasto gasto = new Gasto(id, descricao, valor, categoria);
 
                 gastos.add(gasto);
             }
@@ -59,6 +74,57 @@ public boolean salvar(Gasto gasto) {
 
         return gastos;
     }
+
+public Gasto buscarPorId(int id) {
+
+    String sql = """
+            SELECT g.id,
+                    g.descricao,
+                    g.valor,
+                    c.id AS categoria_id,
+                    c.nome AS categoria_nome
+                FROM gastos g
+                JOIN categorias c
+                ON g.categoria_id = c.id
+                WHERE g.id = ?
+                """;
+
+                try (Connection conexao = BancoDeDados.conectar();
+                    PreparedStatement comando = conexao.prepareStatement(sql)) {
+
+                    comando.setInt(1, id);
+                    ResultSet resultado = comando.executeQuery();
+
+                    if (resultado.next()) {
+
+                        String descricao = resultado.getString("descricao");
+                        double valor = resultado.getDouble("valor");
+
+                        int categoriaId = resultado.getInt("categoria_id");
+                        String categoriaNome = resultado.getString("categoria_nome");
+
+                        Categoria categoria =
+                                new Categoria(categoriaId, categoriaNome);
+
+                        Gasto gasto =
+                                new Gasto(id, descricao, valor, categoria);
+
+                        return gasto;
+                    }
+
+                    } catch (Exception e) {
+
+    System.out.println(
+            "Erro ao buscar gasto por ID."
+    );
+
+    e.printStackTrace();
+}
+
+return null;
+}
+
+
 public boolean atualizar(Gasto gasto) {
 
     String sql =
@@ -111,6 +177,7 @@ public boolean atualizar(Gasto gasto) {
         return false;
     }
 }
+
 public boolean excluir(int id) {
 
     String sql = "DELETE FROM gastos WHERE id = ?";

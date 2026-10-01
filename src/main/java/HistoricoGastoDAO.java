@@ -10,8 +10,8 @@ public void salvar(
 
 String sql = """
         INSERT INTO historico_gastos
-        (mes_ano, descricao, valor)
-        VALUES (?, ?, ?)
+        (mes_ano, descricao, valor, categoria_id)
+        VALUES (?, ?, ?, ?)
         """;
 
 try (Connection conexao = BancoDeDados.conectar();
@@ -30,6 +30,11 @@ try (Connection conexao = BancoDeDados.conectar();
         comando.setDouble(
                 3,
                 gasto.getValor()
+        );
+
+        comando.setInt(
+                4,
+                gasto.getCategoria().getId()
         );
 
         comando.executeUpdate();

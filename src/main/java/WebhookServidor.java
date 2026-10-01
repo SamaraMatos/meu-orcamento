@@ -716,10 +716,26 @@ private static void processarGasto(
                 "Valor: R$ " + valor
         );
 
+        CategoriaDAO categoriaDAO =
+        new CategoriaDAO();
+
+Categoria categoria =
+        categoriaDAO.buscarPorNome("Outros");
+
+        if (categoria == null) {
+
+        System.out.println(
+                "Categoria padrão 'Outros' não encontrada."
+        );
+
+        return;
+}
+
         Gasto gasto =
                 new Gasto(
                         descricao,
-                        valor
+                        valor,
+                        categoria
                 );
 
         GastoDAO gastoDAO =
@@ -893,15 +909,39 @@ private static void processarEdicao(
                 return;
                 }
 
-                Gasto gasto =
-                        new Gasto(
-                                id,
-                                descricao,
-                                valor
-                        );
-
                 GastoDAO gastoDAO =
                         new GastoDAO();
+
+                Gasto gastoAntigo =
+                gastoDAO.buscarPorId(id);
+
+                if (gastoAntigo == null) {
+
+                String resposta =
+                        "Não existe nenhum gasto com o ID "
+                        + id
+                        + ".";
+
+                if (numeroRemetente != null) {
+
+                        enviarMensagemWhatsApp(
+                                numeroRemetente,
+                                resposta
+                        );
+                }
+
+                return;
+        }
+        Categoria categoria = gastoAntigo.getCategoria();
+        
+
+        Gasto gasto = new Gasto(
+                id,
+                descricao,
+                valor,
+                categoria);
+
+
 
         boolean atualizado =
                 gastoDAO.atualizar(gasto);
