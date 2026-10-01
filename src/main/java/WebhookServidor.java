@@ -1191,35 +1191,39 @@ private static String obterResumo() {
 
 
 private static String obterMenu() {
-        String resposta = "Meu Orcamento\n\n";
-        resposta += "Para adicionar um gasto, envie uma mensagem com a descrição e o valor separados por espaço.\n";
-        resposta += "Exemplo: Compras 150.50\n\n";
-        resposta += "CONSULTAS\n\n";
-        resposta += "Saldo\n";
-        resposta += "Ver saldo atual\n\n";
-        resposta += "Gastos\n";
-        resposta += "Listar todos os gastos\n\n";
-        resposta += "Resumo\n";
-        resposta += "Obter resumo do mês\n\n";
-        resposta += "ALTERAÇÕES\n\n";
-        resposta += "Excluir <ID>\n";
+
+    String resposta = "💰 *MEU ORÇAMENTO*\n\n";
+
+        resposta += "💸 *ADICIONAR GASTO*\n";
+        resposta += "Envie a descrição e o valor.\n";
+        resposta += "Ex: Mercado 150\n\n";
+
+        resposta += "📊 *CONSULTAS*\n";
+        resposta += "💵 saldo — Ver saldo disponível\n";
+        resposta += "🧾 gastos — Ver gastos cadastrados\n";
+        resposta += "📈 resumo — Ver resumo do mês\n";
+        resposta += "🏷️ categorias — Ver categorias\n\n";
+
+        resposta += "✏️ *GERENCIAR GASTOS*\n";
+        resposta += "🗑️ excluir <ID>\n";
         resposta += "Ex: excluir 26\n\n";
-        resposta += "Editar <ID> <nova descrição> <novo valor>\n";
-        resposta += "Ex: editar 26 compras 500\n\n";
-        resposta += "Novo mes <novo orçamento>\n";
-        resposta += "Ex: novo mes 1000\n\n";
-        resposta += "Orcamento <novo valor>\n";
-        resposta += "Ex: orcamento 1500\n\n";
-        resposta += "AJUDA\n\n";
-        resposta += "Menu\n";
-        resposta += "Exibir este menu\n";      
+
+        resposta += "✏️ editar <ID> <descrição> <valor>\n";
+        resposta += "Ex: editar 26 Mercado 150\n\n";
+
+        resposta += "💰 *ORÇAMENTO*\n";
+        resposta += "🔄 orcamento <valor>\n";
+        resposta += "Ex: orcamento 2000\n\n";
+
+        resposta += "📅 *NOVO MÊS*\n";
+        resposta += "🗓️ novo mes <orçamento>\n";
+        resposta += "Ex: novo mes 2000\n\n";
+
+        resposta += "❓ Digite *menu* para ver estas opções novamente.";
 
         return resposta;
-}
+        }
         
-
-
-
 
 private static String obterSaldo() {
 
