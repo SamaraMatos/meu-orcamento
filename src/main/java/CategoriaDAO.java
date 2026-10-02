@@ -91,5 +91,59 @@ public boolean salvar(Categoria categoria) {
         return false;
     }
 }
+public boolean atualizar(Categoria categoria) {
+
+    String sql = "UPDATE categorias SET nome = ? WHERE id = ?";
+
+    try (Connection conexao = BancoDeDados.conectar();
+        PreparedStatement comando = conexao.prepareStatement(sql)) {
+
+        comando.setString(1, categoria.getNome());
+        comando.setInt(2, categoria.getId());
+
+    int linhasAfetadas = comando.executeUpdate();
+
+    if (linhasAfetadas > 0) {
+        System.out.println("Categoria atualizada no banco!");
+        return true;
+    }
+
+    return false;
+
+    } catch (Exception e) {
+
+        System.out.println("Erro ao atualizar categoria.");
+        e.printStackTrace();
+
+        return false;
+    }
+}
+public Categoria buscarPorId(int id) {
+
+    String sql = "SELECT id, nome FROM categorias WHERE id = ?";
+
+    try (Connection conexao = BancoDeDados.conectar();
+        PreparedStatement comando = conexao.prepareStatement(sql)) {
+
+        comando.setInt(1, id);
+
+        try (ResultSet resultado = comando.executeQuery()) {
+
+            if (resultado.next()) {
+
+                int categoryId = resultado.getInt("id");
+                String categoryName = resultado.getString("nome");
+
+                return new Categoria(categoryId, categoryName);
+            }
+        }
+    } catch (Exception e) {
+
+        System.out.println("Erro ao buscar categoria por ID.");
+        e.printStackTrace();
+    }
+
+    return null;
+}
 }
 

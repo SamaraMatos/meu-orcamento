@@ -315,7 +315,12 @@ private static void processarMensagem(
                         respostaMenu
                 );
         }
-        
+                } else if (mensagemNormalizada.startsWith("editar categoria ")) {
+
+        processarEdicaoCategoria(
+                mensagem,
+                numeroRemetente
+        );
         }else if (mensagemNormalizada.startsWith("excluir ")) {
 
         processarExclusao(
@@ -713,6 +718,103 @@ private static String extrairRemetente(
                 inicio,
                 fim
         );
+}
+
+private static void processarEdicaoCategoria(
+        String mensagem,
+        String numeroRemetente
+) {
+String dados =
+        mensagem.substring(
+                "editar categoria ".length()
+        ).trim();
+
+        String[] partes = dados.split("\\s+", 2);
+
+        if (partes.length < 2) {
+
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "⚠️ Formato inválido. Use: editar categoria <ID> <novo nome>"
+        );
+
+        return;
+        }
+
+        int idCategoria;
+
+        try {
+
+        idCategoria = Integer.parseInt(partes[0]);
+
+        } catch (NumberFormatException e) {
+
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "⚠️ ID da categoria inválido."
+        );
+        return;
+        }
+
+        String novoNome = partes[1].trim();
+
+        if (novoNome.isEmpty()) {
+
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "⚠️ Informe o novo nome da categoria."
+        );
+
+        return;
+        }
+
+        CategoriaDAO categoriaDAO =
+                new CategoriaDAO();
+
+        Categoria categoriaExistente =
+                categoriaDAO.buscarPorId(idCategoria);
+
+        if (categoriaExistente == null) {
+                enviarMensagemWhatsApp(
+                        numeroRemetente,
+                        "⚠️ Categoria não encontrada."
+                );
+                return;
+        
+        }
+
+        if (categoriaExistente.getNome().equalsIgnoreCase("Outros")) {
+
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "⚠️ A categoria Outros é padrão do sistema e não pode ser renomeada."
+        );
+
+        return;
+        }
+
+
+
+        Categoria categoria = 
+                new Categoria(idCategoria, novoNome);
+
+        boolean atualizou =
+                categoriaDAO.atualizar(categoria);
+
+if (atualizou) {
+
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "✅ Categoria atualizada com sucesso!"
+        );
+
+        } else {
+
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "⚠️ Não foi possível atualizar a categoria."
+        );
+}
 }
 
 private static void processarGasto(
