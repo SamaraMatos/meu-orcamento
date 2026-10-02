@@ -719,9 +719,81 @@ private static void processarGasto(
         String mensagem,
         String numeroRemetente
 ) {
+        CategoriaDAO categoriaDAO = new CategoriaDAO();
+        List<Categoria> categorias = categoriaDAO.buscarTodos();
+        categorias.sort(
+        (a, b) -> Integer.compare(
+                b.getNome().length(),
+                a.getNome().length()
+        )
+);
+
+        String mensagemParaProcessar = mensagem.trim();
+
+        String[] partesOriginais = 
+        mensagemParaProcessar.split("\\s+"); 
+
+        String ultimoItemOriginal = 
+        partesOriginais[partesOriginais.length - 1];
+
+        boolean ultimoItemEhNumero = false;
+
+        try {
+                Double.parseDouble(ultimoItemOriginal.replace(",", "."));
+                ultimoItemEhNumero = true;
+        } catch (NumberFormatException e) {
+        }
+        
+        Categoria categoriaEncontrada = null;
+
+        if (ultimoItemEhNumero) {
+
+        categoriaEncontrada =
+                categoriaDAO.buscarPorNome("Outros");
+        }
+
+        if (!ultimoItemEhNumero) {
+
+        for (Categoria categoria : categorias) {
+
+        String nomeCategoria = 
+        categoria.getNome().toLowerCase();
+
+        if (mensagemParaProcessar.toLowerCase().endsWith(" " +nomeCategoria)) {
+        mensagemParaProcessar =
+        mensagemParaProcessar.substring(
+                0,
+                mensagemParaProcessar.length()
+                        - nomeCategoria.length()
+        ).trim();
+
+                categoriaEncontrada = categoria;
+
+                break;
+
+        }
+}
+        }
+
+        if (categoriaEncontrada == null) {
+
+        String resposta =
+                "⚠️ Categoria não encontrada. "
+                + "Use 'categorias' para ver a lista de categorias disponíveis.";
+
+        if (numeroRemetente != null) {
+
+                enviarMensagemWhatsApp(
+                        numeroRemetente,
+                        resposta
+                );
+        }
+
+        return;
+        }
 
         String[] partesMensagem =
-                mensagem.trim().split("\\s+");
+        mensagemParaProcessar.trim().split("\\s+");
 
         if (partesMensagem.length < 2) {
 
@@ -756,12 +828,12 @@ private static void processarGasto(
         }
 
         int posicaoValor =
-                mensagem.lastIndexOf(
+                mensagemParaProcessar.lastIndexOf(
                         ultimoItem
                 );
 
         String descricao =
-                mensagem.substring(
+                mensagemParaProcessar.substring(
                         0,
                         posicaoValor
                 ).trim();
@@ -785,26 +857,12 @@ private static void processarGasto(
                 "Valor: R$ " + valor
         );
 
-        CategoriaDAO categoriaDAO =
-        new CategoriaDAO();
-
-Categoria categoria =
-        categoriaDAO.buscarPorNome("Outros");
-
-        if (categoria == null) {
-
-        System.out.println(
-                "Categoria padrão 'Outros' não encontrada."
-        );
-
-        return;
-}
 
         Gasto gasto =
                 new Gasto(
                         descricao,
                         valor,
-                        categoria
+                        categoriaEncontrada
                 );
 
         GastoDAO gastoDAO =
@@ -852,6 +910,7 @@ Categoria categoria =
         );
         }
 }
+
 private static void processarExclusao(
                 String mensagem,
                 String numeroRemetente
