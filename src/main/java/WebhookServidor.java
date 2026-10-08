@@ -368,6 +368,19 @@ private static void processarMensagem(
                         respostaCategorias
                 );
         }
+        } else if (mensagemNormalizada.startsWith("consultar ")) {
+
+        String pergunta = mensagem.substring(9).trim();
+
+        String resposta =
+                AssistenteFinanceiro.consultar(pergunta);
+
+        if (numeroRemetente != null) {
+                enviarMensagemWhatsApp(
+                        numeroRemetente,
+                        resposta
+                );
+        }
         }else {
 
         processarGasto(
