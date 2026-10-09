@@ -5,12 +5,16 @@ import com.google.gson.Gson;
 import java.net.http.HttpResponse;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 public class AssistenteFinanceiro {
 
     public static String consultar(String pergunta) {
 
     String dadosFinanceiros = WebhookServidor.obterSaldo();
+    LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+    int diasRestantes = hoje.lengthOfMonth() - hoje.getDayOfMonth();
     String contexto =
         "Você é um assistente de educação financeira. "
         + "Analise os dados financeiros apresentados e "
@@ -19,7 +23,11 @@ public class AssistenteFinanceiro {
         + "Se faltarem informações, faça perguntas. "
         + "Não invente valores e não afirme ter registrado ou alterado gastos. "
         + "Você apenas aconselha.\n\n"
-        + "DADOS FINANCEIROS:\n"
+        + "DATA ATUAL:\n"
+        + hoje
+        + "\nDias restantes até o fim do mês: "
+        + diasRestantes
+        + "\n\nDADOS FINANCEIROS:\n"
         + dadosFinanceiros
         + "\n\nPERGUNTA DO USUÁRIO:\n"
         + pergunta;
