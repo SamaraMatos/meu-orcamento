@@ -55,12 +55,12 @@ public class AssistenteFinanceiro {
                         "Erro na API Gemini. Status: " + resposta.statusCode()
                 );
 
+                System.err.println(
+                        "Detalhes do erro Gemini: " + resposta.body()
+                );
+
                 return "Não consegui consultar o Gemini agora. Tente novamente mais tarde.";
             }
-
-            System.err.println(
-                    "Detalhes do erro Gemini: " + resposta.body()
-            );
 
             JsonObject json = JsonParser.parseString(resposta.body())
                     .getAsJsonObject();
@@ -80,6 +80,7 @@ public class AssistenteFinanceiro {
 
         } catch (Exception e) {
 
+            System.err.println("Erro ao consultar o Gemini: " + e.getMessage());
             return "Não consegui consultar o Gemini agora.";
         }
 
