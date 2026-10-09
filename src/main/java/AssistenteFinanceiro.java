@@ -33,7 +33,7 @@ public class AssistenteFinanceiro {
     HttpClient cliente = HttpClient.newHttpClient();
 
     String enderecoApi =
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent";
 
         HttpRequest requisicao = HttpRequest.newBuilder()
         .uri(URI.create(enderecoApi))
