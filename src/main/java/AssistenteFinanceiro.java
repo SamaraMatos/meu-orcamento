@@ -7,12 +7,28 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.List;
 
 public class AssistenteFinanceiro {
 
     public static String consultar(String pergunta) {
 
     String dadosFinanceiros = WebhookServidor.obterResumo();
+
+    GastoDAO gastoDAO = new GastoDAO();
+
+    List<Gasto> gastos = gastoDAO.buscarTodos();
+
+    StringBuilder detalhesGastos = new StringBuilder();
+
+    for (Gasto gasto : gastos) {
+        detalhesGastos.append(gasto.getDescricao())
+                .append(" - R$ ")
+                .append(String.format("%.2f", gasto.getValor()))
+                .append(" - ")
+                .append(gasto.getCategoria().getNome())
+                .append("\n");
+    }
 
     LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
     int diasRestantes = hoje.lengthOfMonth() - hoje.getDayOfMonth();
@@ -42,6 +58,8 @@ public class AssistenteFinanceiro {
         + diasRestantes
         + "\n\nDADOS FINANCEIROS:\n"
         + dadosFinanceiros
+        + "\n\nGASTOS DETALHADOS:\n"
+        + detalhesGastos.toString()
         + "\n\nPERGUNTA DO USUÁRIO:\n"
         + pergunta;
 
