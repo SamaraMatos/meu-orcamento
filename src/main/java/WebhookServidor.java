@@ -1346,7 +1346,7 @@ private static String listarCategorias() {
 
 }
 
-private static String obterResumo() {
+public static String obterResumo() {
         OrcamentoDAO orcamentoDAO =
                 new OrcamentoDAO();
 

@@ -12,11 +12,18 @@ public class AssistenteFinanceiro {
 
     public static String consultar(String pergunta) {
 
-    String dadosFinanceiros = WebhookServidor.obterSaldo();
+    String dadosFinanceiros = WebhookServidor.obterResumo();
+
     LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
     int diasRestantes = hoje.lengthOfMonth() - hoje.getDayOfMonth();
+    
     String contexto =
         "Você é um assistente de educação financeira. "
+        + "Analise os gastos por categoria para identificar onde o dinheiro está sendo mais utilizado. "
+        + "Considere essas informações ao avaliar novas despesas e sugerir melhorias. "
+        + "Não considere automaticamente a categoria com maior gasto como desperdício, "
+        + "pois despesas essenciais podem representar a maior parte do orçamento. "
+        + "Mencione as categorias apenas quando forem relevantes para a pergunta. "
         + "Responda de forma curta, direta e natural, como uma conversa no WhatsApp. "
         + "Prefira de 3 a 5 frases curtas, sem apresentações ou textos longos. "
         + "Dê primeiro sua recomendação e depois explique brevemente o motivo. "
