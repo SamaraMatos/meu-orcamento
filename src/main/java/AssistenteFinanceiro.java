@@ -58,6 +58,10 @@ public class AssistenteFinanceiro {
                 return "Não consegui consultar o Gemini agora. Tente novamente mais tarde.";
             }
 
+            System.err.println(
+                    "Detalhes do erro Gemini: " + resposta.body()
+            );
+
             JsonObject json = JsonParser.parseString(resposta.body())
                     .getAsJsonObject();
 
