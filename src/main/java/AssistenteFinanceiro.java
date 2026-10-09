@@ -10,6 +10,20 @@ public class AssistenteFinanceiro {
 
     public static String consultar(String pergunta) {
 
+    String dadosFinanceiros = WebhookServidor.obterSaldo();
+    String contexto =
+        "Você é um assistente de educação financeira. "
+        + "Analise os dados financeiros apresentados e "
+        + "responda à pergunta do usuário com clareza. "
+        + "Considere o saldo disponível e possíveis despesas futuras. "
+        + "Se faltarem informações, faça perguntas. "
+        + "Não invente valores e não afirme ter registrado ou alterado gastos. "
+        + "Você apenas aconselha.\n\n"
+        + "DADOS FINANCEIROS:\n"
+        + dadosFinanceiros
+        + "\n\nPERGUNTA DO USUÁRIO:\n"
+        + pergunta;
+
     String chaveApi = System.getenv("GEMINI_API_KEY");
 
     if (chaveApi == null || chaveApi.isBlank()) {
@@ -23,7 +37,7 @@ public class AssistenteFinanceiro {
             "contents", java.util.List.of(
                 java.util.Map.of(
                     "parts", java.util.List.of(
-                        java.util.Map.of("text", pergunta)
+                        java.util.Map.of("text", contexto)
                     )
                 )
             )

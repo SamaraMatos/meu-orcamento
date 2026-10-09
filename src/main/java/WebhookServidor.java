@@ -1498,7 +1498,7 @@ private static String obterMenu() {
 
 
 
-private static String obterSaldo() {
+public static String obterSaldo() {
 
         OrcamentoDAO orcamentoDAO =
                 new OrcamentoDAO();
