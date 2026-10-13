@@ -772,9 +772,7 @@ private static void processarFinalizacao(
                 "❌ Não foi possível finalizar. Verifique se o ID existe e está ativo."
         );
         }
-
-
-        }
+}
 
 private static String extrairIdMensagem(String corpo) {
 
@@ -1568,6 +1566,19 @@ public static String obterResumo() {
 
         double saldo = orcamentoAtual - totalGastos;
 
+        PlanejamentoDAO planejamentoDAO = new PlanejamentoDAO();
+
+        List<Planejamento> planejamentos =
+                planejamentoDAO.buscarAtivos();
+        
+        double totalPlanejado = 0;
+
+        for (Planejamento planejamento : planejamentos) {
+        totalPlanejado += planejamento.getValorEstimado();
+        }
+
+        double saldoProjetado = saldo - totalPlanejado;
+
         String resposta = (
                 "Resumo do mês\n\n"
         );
@@ -1607,7 +1618,30 @@ public static String obterResumo() {
                 resposta += "⚠️ Orçamento ultrapassado em R$ "
                         + String.format("%.2f", Math.abs(saldo));
                 }
+
+                if (!planejamentos.isEmpty()) {
+                resposta += "\n\n📅 *PLANEJAMENTOS ATIVOS*\n";
                 
+                for (Planejamento planejamento : planejamentos) {
+                resposta += String.format(
+                        "%d - %s: R$ %.2f\n",
+                        planejamento.getId(),
+                        planejamento.getDescricao(),
+                        planejamento.getValorEstimado()
+                );
+        }
+                resposta += String.format(
+                        "\nTotal planejado: R$ %.2f\n",
+                        totalPlanejado
+                );
+
+                resposta += String.format(
+                        "Saldo projetado: R$ %.2f\n",
+                        saldoProjetado
+                );
+
+                resposta += "\n💡 Valores planejados não são gastos realizados.";
+        }
                 
         return resposta;
         }
@@ -1627,6 +1661,15 @@ private static String obterMenu() {
         resposta += "🧾 gastos — Ver gastos cadastrados\n";
         resposta += "📈 resumo — Ver resumo do mês\n";
         resposta += "🏷️ categorias — Ver categorias\n\n";
+
+        resposta += "📅 *PLANEJAMENTOS*\n";
+        resposta += "➕ planejar <descrição> <valor>\n";
+        resposta += "Ex: planejar Jantar 150\n\n";
+
+        resposta += "📋 planejamentos — Ver planejamentos ativos\n\n";
+
+        resposta += "✅ finalizar <ID>\n";
+        resposta += "Ex: finalizar 1\n\n";
 
         resposta += "🏷️ *GERENCIAR CATEGORIAS*\n";
         resposta += "➕ nova categoria <nome>\n";
