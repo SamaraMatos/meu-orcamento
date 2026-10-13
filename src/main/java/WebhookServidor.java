@@ -381,6 +381,29 @@ private static void processarMensagem(
                         resposta
                 );
         }
+        } else if (mensagemNormalizada.startsWith("planejar ")) {
+
+        processarPlanejamento(
+                mensagem,
+                numeroRemetente
+        );
+        } else if (mensagemNormalizada.startsWith("finalizar ")) {
+
+        processarFinalizacao(
+                mensagem,
+                numeroRemetente
+        );
+        } else if (mensagemNormalizada.equals("planejamentos")) {
+
+        String respostaPlanejamentos =
+                listarPlanejamentos();
+
+                if (numeroRemetente != null) {
+                enviarMensagemWhatsApp(
+                        numeroRemetente,
+                        respostaPlanejamentos
+                );
+        }
         }else {
 
         processarGasto(
@@ -504,6 +527,33 @@ private static void processarNovoMes(
         }
         }
 
+private static String listarPlanejamentos() {
+
+        PlanejamentoDAO planejamentoDAO = new PlanejamentoDAO();
+
+        List<Planejamento> planejamentos = planejamentoDAO.buscarAtivos();
+
+        if (planejamentos.isEmpty()) {
+        return "📋 Você não possui planejamentos ativos.";
+        }
+
+        StringBuilder resposta = new StringBuilder();
+
+        resposta.append("📋 *Planejamentos ativos:*\n\n");
+
+        for (Planejamento planejamento : planejamentos) {
+
+        resposta.append(planejamento.getId())
+                .append(" - ")
+                .append(planejamento.getDescricao())
+                .append(": R$ ")
+                .append(String.format("%.2f", planejamento.getValorEstimado()))
+                .append("\n");
+        }
+
+        return resposta.toString();
+        }
+
 private static String calcularProximoMes(
                 String mesAtual
         ) {
@@ -614,6 +664,117 @@ private static void processarNovaCategoria(
         }
 }
 
+private static void processarPlanejamento(
+        String mensagem,
+        String numeroRemetente) {
+        String dadosPlanejamento = mensagem.substring(8).trim();
+        int ultimoEspaco = dadosPlanejamento.lastIndexOf(" ");
+
+                if (ultimoEspaco == -1) {
+                        enviarMensagemWhatsApp(
+                                numeroRemetente,
+                                "Formato correto: planejar Descrição Valor"
+                        );
+                return;
+                }
+
+        String descricao = dadosPlanejamento.substring(0, ultimoEspaco).trim();
+
+        String valorTexto = dadosPlanejamento.substring(ultimoEspaco + 1).trim();
+
+        double valorEstimado;
+
+        try {
+        valorEstimado = Double.parseDouble(
+                valorTexto.replace(",", ".")
+        );
+
+        } catch (NumberFormatException e) {
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "Valor inválido. Exemplo: planejar Jantar 150,50"
+        );
+        return;
+        }
+
+        if (!Double.isFinite(valorEstimado) || valorEstimado <= 0) {
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "O valor do planejamento deve ser maior que zero."
+        );
+        return ;
+        }
+
+        Planejamento planejamento = new Planejamento(
+                0,
+                descricao,
+                valorEstimado,
+                "ativo"
+        );
+
+        PlanejamentoDAO planejamentoDAO = new PlanejamentoDAO();
+
+        boolean salvou = planejamentoDAO.salvar(planejamento);
+
+        if (salvou) {
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "✅ Planejamento cadastrado com sucesso!"
+        );
+        } else {
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "❌ Não foi possível cadastrar o planejamento."
+        );
+        }
+
+        return;
+}
+
+private static void processarFinalizacao(
+                String mensagem,
+                String numeroRemetente
+        ) {
+        String idTexto = mensagem.substring(9).trim();
+
+        int id;
+
+        try {
+        id = Integer.parseInt(idTexto);
+
+        } catch (NumberFormatException e) {
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "ID inválido. Exemplo: finalizar 3"
+        );
+        return;
+        }
+        if (id <= 0) {
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "O ID do planejamento deve ser maior que zero."
+        );
+        return;
+        }
+
+        PlanejamentoDAO planejamentoDAO = new PlanejamentoDAO();
+
+        boolean encerrou = planejamentoDAO.encerrar(id);
+
+        if (encerrou) {
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "✅ Planejamento finalizado com sucesso!"
+        );
+        } else {
+        enviarMensagemWhatsApp(
+                numeroRemetente,
+                "❌ Não foi possível finalizar. Verifique se o ID existe e está ativo."
+        );
+        }
+
+
+        }
 
 private static String extrairIdMensagem(String corpo) {
 
