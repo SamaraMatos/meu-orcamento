@@ -17,7 +17,7 @@ import java.util.Map;
 public class WebhookServidor {
 
 private static final String TOKEN_VERIFICACAO =
-        "meuorcamento123";
+        System.getenv("WHATSAPP_VERIFY_TOKEN");
 
 private static final String WHATSAPP_TOKEN =
         System.getenv("WHATSAPP_TOKEN");
