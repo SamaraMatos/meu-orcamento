@@ -53,6 +53,34 @@ O projeto continua em desenvolvimento e tem sido uma oportunidade de aprender na
 - Receber análises e sugestões considerando os dados financeiros cadastrados.
 - Consultar o impacto de possíveis gastos no orçamento disponível.
 
+## 📸 Demonstração do projeto
+
+Abaixo estão alguns exemplos do Meu Orçamento funcionando diretamente pelo WhatsApp.
+
+### 🤖 Assistente financeiro com Gemini
+
+O assistente utiliza as informações financeiras cadastradas para responder perguntas em linguagem natural e auxiliar nas decisões sobre os gastos.
+
+![Assistente financeiro com Gemini](imagens/assistente-gemini.png)
+
+### 📊 Resumo financeiro
+
+Consulta do orçamento mensal, despesas por categoria, saldo disponível e valores reservados para planejamentos futuros.
+
+![Resumo financeiro mensal](imagens/resumo-financeiro.png)
+
+### 📱 Comandos disponíveis no WhatsApp
+
+O sistema permite cadastrar despesas, consultar informações, gerenciar categorias e criar planejamentos por meio de comandos.
+
+![Comandos do Meu Orçamento](imagens/comandos-whatsapp.png)
+
+### 💰 Cadastro de despesas
+
+Exemplos de despesas registradas diretamente pelo WhatsApp, com atualização automática do total gasto e do saldo disponível.
+
+![Cadastro de despesas](imagens/cadastro-despesas.png)
+
 ## 🛠️ Tecnologias utilizadas
 
 - **Java:** linguagem principal utilizada no desenvolvimento da aplicação.
