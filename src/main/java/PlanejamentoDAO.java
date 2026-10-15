@@ -28,7 +28,7 @@ public boolean salvar(Planejamento planejamento) {
     return false;
 }
 
-public List<Planejamento> buscarAtivos() {
+public List<Planejamento> buscarAtivos() throws SQLException {
 
     List<Planejamento> planejamentos = new ArrayList<>();
 
@@ -36,9 +36,14 @@ public List<Planejamento> buscarAtivos() {
             + "FROM public.planejamentos "
             + "WHERE status = 'ativo' ORDER BY id";
 
-    try (Connection conexao = BancoDeDados.conectar();
-    PreparedStatement stmt = conexao.prepareStatement(sql);
-    ResultSet resultado = stmt.executeQuery()) {
+    try (Connection conexao = BancoDeDados.conectar()) {
+
+        if (conexao == null) {
+            throw new SQLException("Não foi possível conectar ao banco de dados.");
+        }
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql);
+            ResultSet resultado = stmt.executeQuery()) {
 
         while (resultado.next()) {
             int id = resultado.getInt("id");
@@ -49,9 +54,11 @@ public List<Planejamento> buscarAtivos() {
             Planejamento planejamento = new Planejamento(id, descricao, valorEstimado, status);
             planejamentos.add(planejamento);
         }
+    }
 
     } catch (SQLException e) {
     System.out.println("Erro ao buscar planejamentos: " + e.getMessage());
+    throw e;
     }
 
     return planejamentos;

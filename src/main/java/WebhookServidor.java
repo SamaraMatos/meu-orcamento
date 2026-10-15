@@ -297,8 +297,13 @@ private static void processarMensagem(
         }
         } else if (mensagemNormalizada.equals("resumo")) {
 
-        String respostaResumo =
-                obterResumo();
+        String respostaResumo;
+
+        try {
+        respostaResumo = obterResumo();
+        } catch (java.sql.SQLException e) {
+        respostaResumo = "⚠️ Não consegui obter todos os dados para montar seu resumo agora. Tente novamente em instantes.";
+        }
 
         if (numeroRemetente != null) {
 
@@ -531,7 +536,13 @@ private static String listarPlanejamentos() {
 
         PlanejamentoDAO planejamentoDAO = new PlanejamentoDAO();
 
-        List<Planejamento> planejamentos = planejamentoDAO.buscarAtivos();
+        List<Planejamento> planejamentos;
+
+        try {
+        planejamentos = planejamentoDAO.buscarAtivos();
+        } catch (java.sql.SQLException e) {
+        return "⚠️ Não consegui consultar seus planejamentos agora. Tente novamente em instantes.";
+        }
 
         if (planejamentos.isEmpty()) {
         return "📋 Você não possui planejamentos ativos.";
@@ -1505,7 +1516,7 @@ private static String listarCategorias() {
 
 }
 
-public static String obterResumo() {
+public static String obterResumo() throws java.sql.SQLException {
         OrcamentoDAO orcamentoDAO =
                 new OrcamentoDAO();
 

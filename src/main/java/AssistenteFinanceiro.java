@@ -13,7 +13,13 @@ public class AssistenteFinanceiro {
 
     public static String consultar(String pergunta) {
 
-    String dadosFinanceiros = WebhookServidor.obterResumo();
+    String dadosFinanceiros;
+
+    try {
+        dadosFinanceiros = WebhookServidor.obterResumo();
+    } catch (java.sql.SQLException e) {
+        return "⚠️ Não consegui obter todos os dados financeiros para analisar sua pergunta agora. Tente novamente em instantes.";
+    }
 
     GastoDAO gastoDAO = new GastoDAO();
 
