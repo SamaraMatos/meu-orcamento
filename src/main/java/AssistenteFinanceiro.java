@@ -13,127 +13,117 @@ public class AssistenteFinanceiro {
 
     public static String consultar(String pergunta) {
 
-    String dadosFinanceiros;
+        String dadosFinanceiros;
 
-    try {
-        dadosFinanceiros = WebhookServidor.obterResumo();
-    } catch (java.sql.SQLException e) {
-        return "⚠️ Não consegui obter todos os dados financeiros para analisar sua pergunta agora. Tente novamente em instantes.";
-    }
+        try {
+            dadosFinanceiros = WebhookServidor.obterResumo();
+        } catch (java.sql.SQLException e) {
+            return "⚠️ Não consegui obter todos os dados financeiros para analisar sua pergunta agora. Tente novamente em instantes.";
+        }
 
-    GastoDAO gastoDAO = new GastoDAO();
+        GastoDAO gastoDAO = new GastoDAO();
 
-    List<Gasto> gastos = gastoDAO.buscarTodos();
+        List<Gasto> gastos = gastoDAO.buscarTodos();
 
-    StringBuilder detalhesGastos = new StringBuilder();
+        StringBuilder detalhesGastos = new StringBuilder();
 
-    for (Gasto gasto : gastos) {
-        detalhesGastos.append(gasto.getDescricao())
-                .append(" - R$ ")
-                .append(String.format("%.2f", gasto.getValor()))
-                .append(" - ")
-                .append(gasto.getCategoria().getNome())
-                .append("\n");
-    }
+        for (Gasto gasto : gastos) {
+            detalhesGastos.append(gasto.getDescricao())
+                    .append(" - R$ ")
+                    .append(String.format("%.2f", gasto.getValor()))
+                    .append(" - ")
+                    .append(gasto.getCategoria().getNome())
+                    .append("\n");
+        }
 
-    LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-    int diasRestantes = hoje.lengthOfMonth() - hoje.getDayOfMonth();
-    
-    String contexto =
-        "Você é um assistente de educação financeira. "
-        + "Não classifique um gasto como desnecessário apenas pelo valor ou descrição. "
-        + "Considere que despesas com saúde, animais, alimentação e outras necessidades podem ser essenciais. "
-        + "Ao sugerir economia, apresente recomendações específicas baseadas nos gastos registrados. "
-        + "Não invente motivos para as compras nem afirme que um gasto poderia ter sido evitado sem evidências. "
-        + "Não termine a resposta com perguntas por hábito. "
-        + "Se houver informações suficientes, responda e encerre naturalmente. "
-        + "Analise os gastos por categoria para identificar onde o dinheiro está sendo mais utilizado. "
-        + "Considere essas informações ao avaliar novas despesas e sugerir melhorias. "
-        + "Diferencie sempre gastos realizados de planejamentos futuros. "
-        + "O saldo disponível representa o saldo real, sem descontar os planejamentos. "
-        + "O saldo projetado representa o saldo real menos os planejamentos ativos. "
-        + "Ao avaliar se o usuário pode fazer uma nova compra, considere também o saldo projetado. "
-        + "Planejamentos são estimativas e não devem ser tratados como gastos já realizados. "
-        + "Não considere automaticamente a categoria com maior gasto como desperdício, "
-        + "pois despesas essenciais podem representar a maior parte do orçamento. "
-        + "Mencione as categorias apenas quando forem relevantes para a pergunta. "
-        + "Responda de forma curta, direta e natural, como uma conversa no WhatsApp. "
-        + "Prefira de 3 a 5 frases curtas, sem apresentações ou textos longos. "
-        + "Dê primeiro sua recomendação e depois explique brevemente o motivo. "
-        + "Dê recomendações claras, mas evite frases autoritárias como 'você não deve gastar'. "
-        + "Prefira expressões naturais como 'eu evitaria essa compra por enquanto' ou 'essa compra pode comprometer seus planos'. "
-        + "Ao avaliar uma nova compra, explique seu impacto no saldo real e no saldo projetado, quando relevante. "
-        + "Se a compra ultrapassar o saldo projetado, informe o valor dessa diferença. "
-        + "Lembre que planejamentos são estimativas flexíveis e podem ser ajustados conforme as prioridades do usuário. "
-        + "Não tome decisões pelo usuário; apresente as consequências para ajudá-lo a decidir. "
-        + "Mostre apenas os números mais importantes para a decisão. "
-        + "Não use títulos com #, nem formatação Markdown complexa. "
-        + "Faça perguntas somente quando forem indispensáveis. "
-        + "Analise os dados financeiros apresentados e "
-        + "responda à pergunta do usuário com clareza. "
-        + "Considere o saldo disponível e possíveis despesas futuras. "
-        + "Se faltarem informações, faça perguntas. "
-        + "Não invente valores e não afirme ter registrado ou alterado gastos. "
-        + "Você apenas aconselha.\n\n"
-        + "DATA ATUAL:\n"
-        + hoje
-        + "\nDias restantes até o fim do mês: "
-        + diasRestantes
-        + "\n\nDADOS FINANCEIROS:\n"
-        + dadosFinanceiros
-        + "\n\nGASTOS DETALHADOS:\n"
-        + detalhesGastos.toString()
-        + "\n\nPERGUNTA DO USUÁRIO:\n"
-        + pergunta;
+        LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+        int diasRestantes = hoje.lengthOfMonth() - hoje.getDayOfMonth();
 
-    String chaveApi = System.getenv("GEMINI_API_KEY");
+        String contexto = "Você é um assistente de educação financeira. "
+                + "Não classifique um gasto como desnecessário apenas pelo valor ou descrição. "
+                + "Considere que despesas com saúde, animais, alimentação e outras necessidades podem ser essenciais. "
+                + "Ao sugerir economia, apresente recomendações específicas baseadas nos gastos registrados. "
+                + "Não invente motivos para as compras nem afirme que um gasto poderia ter sido evitado sem evidências. "
+                + "Não termine a resposta com perguntas por hábito. "
+                + "Se houver informações suficientes, responda e encerre naturalmente. "
+                + "Analise os gastos por categoria para identificar onde o dinheiro está sendo mais utilizado. "
+                + "Considere essas informações ao avaliar novas despesas e sugerir melhorias. "
+                + "Diferencie sempre gastos realizados de planejamentos futuros. "
+                + "O saldo disponível representa o saldo real, sem descontar os planejamentos. "
+                + "O saldo projetado representa o saldo real menos os planejamentos ativos. "
+                + "Ao avaliar se o usuário pode fazer uma nova compra, considere também o saldo projetado. "
+                + "Planejamentos são estimativas e não devem ser tratados como gastos já realizados. "
+                + "Não considere automaticamente a categoria com maior gasto como desperdício, "
+                + "pois despesas essenciais podem representar a maior parte do orçamento. "
+                + "Mencione as categorias apenas quando forem relevantes para a pergunta. "
+                + "Responda de forma curta, direta e natural, como uma conversa no WhatsApp. "
+                + "Prefira de 3 a 5 frases curtas, sem apresentações ou textos longos. "
+                + "Dê primeiro sua recomendação e depois explique brevemente o motivo. "
+                + "Dê recomendações claras, mas evite frases autoritárias como 'você não deve gastar'. "
+                + "Prefira expressões naturais como 'eu evitaria essa compra por enquanto' ou 'essa compra pode comprometer seus planos'. "
+                + "Ao avaliar uma nova compra, explique seu impacto no saldo real e no saldo projetado, quando relevante. "
+                + "Se a compra ultrapassar o saldo projetado, informe o valor dessa diferença. "
+                + "Lembre que planejamentos são estimativas flexíveis e podem ser ajustados conforme as prioridades do usuário. "
+                + "Não tome decisões pelo usuário; apresente as consequências para ajudá-lo a decidir. "
+                + "Mostre apenas os números mais importantes para a decisão. "
+                + "Não use títulos com #, nem formatação Markdown complexa. "
+                + "Faça perguntas somente quando forem indispensáveis. "
+                + "Analise os dados financeiros apresentados e "
+                + "responda à pergunta do usuário com clareza. "
+                + "Considere o saldo disponível e possíveis despesas futuras. "
+                + "Se faltarem informações, faça perguntas. "
+                + "Não invente valores e não afirme ter registrado ou alterado gastos. "
+                + "Você apenas aconselha.\n\n"
+                + "DATA ATUAL:\n"
+                + hoje
+                + "\nDias restantes até o fim do mês: "
+                + diasRestantes
+                + "\n\nDADOS FINANCEIROS:\n"
+                + dadosFinanceiros
+                + "\n\nGASTOS DETALHADOS:\n"
+                + detalhesGastos.toString()
+                + "\n\nPERGUNTA DO USUÁRIO:\n"
+                + pergunta;
 
-    if (chaveApi == null || chaveApi.isBlank()) {
-        return "A chave do Gemini não está configurada.";
-    }
+        String chaveApi = System.getenv("GEMINI_API_KEY");
 
-    Gson gson = new Gson();
+        if (chaveApi == null || chaveApi.isBlank()) {
+            return "A chave do Gemini não está configurada.";
+        }
 
-    String corpoJson = gson.toJson(
-        java.util.Map.of(
-            "contents", java.util.List.of(
+        Gson gson = new Gson();
+
+        String corpoJson = gson.toJson(
                 java.util.Map.of(
-                    "parts", java.util.List.of(
-                        java.util.Map.of("text", contexto)
-                    )
-                )
-            )
-        )
-    );
+                        "contents", java.util.List.of(
+                                java.util.Map.of(
+                                        "parts", java.util.List.of(
+                                                java.util.Map.of("text", contexto))))));
 
-    HttpClient cliente = HttpClient.newHttpClient();
+        HttpClient cliente = HttpClient.newHttpClient();
 
-    String enderecoApi =
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent";
+        String enderecoApi = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent";
 
         HttpRequest requisicao = HttpRequest.newBuilder()
-        .uri(URI.create(enderecoApi))
-        .header("Content-Type", "application/json")
-        .header("x-goog-api-key", chaveApi)
-        .POST(HttpRequest.BodyPublishers.ofString(corpoJson))
-        .build();
+                .uri(URI.create(enderecoApi))
+                .header("Content-Type", "application/json")
+                .header("x-goog-api-key", chaveApi)
+                .POST(HttpRequest.BodyPublishers.ofString(corpoJson))
+                .build();
 
         try {
 
             HttpResponse<String> resposta = cliente.send(
                     requisicao,
-                    HttpResponse.BodyHandlers.ofString()
-            );
+                    HttpResponse.BodyHandlers.ofString());
 
             if (resposta.statusCode() != 200) {
 
                 System.err.println(
-                        "Erro na API Gemini. Status: " + resposta.statusCode()
-                );
+                        "Erro na API Gemini. Status: " + resposta.statusCode());
 
                 System.err.println(
-                        "Detalhes do erro Gemini: " + resposta.body()
-                );
+                        "Detalhes do erro Gemini: " + resposta.body());
 
                 return "Não consegui consultar o Gemini agora. Tente novamente mais tarde.";
             }
@@ -160,6 +150,6 @@ public class AssistenteFinanceiro {
             return "Não consegui consultar o Gemini agora.";
         }
 
-}
-    
+    }
+
 }

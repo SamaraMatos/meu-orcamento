@@ -14,21 +14,19 @@ public class ControleMesDAO {
                 """;
 
         try (Connection conexao = BancoDeDados.conectar();
-            PreparedStatement comando = conexao.prepareStatement(sql)) {
+                PreparedStatement comando = conexao.prepareStatement(sql)) {
 
             comando.setString(1, mesAno);
 
             comando.executeUpdate();
 
             System.out.println(
-                    "Mês atual salvo no banco!"
-            );
+                    "Mês atual salvo no banco!");
 
         } catch (Exception e) {
 
             System.out.println(
-                    "Erro ao salvar mês atual."
-            );
+                    "Erro ao salvar mês atual.");
 
             e.printStackTrace();
         }
@@ -36,25 +34,22 @@ public class ControleMesDAO {
 
     public String buscar() {
 
-        String sql =
-                "SELECT mes_ano FROM controle_mes WHERE id = 1";
+        String sql = "SELECT mes_ano FROM controle_mes WHERE id = 1";
 
         try (Connection conexao = BancoDeDados.conectar();
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            ResultSet resultado = comando.executeQuery()) {
+                PreparedStatement comando = conexao.prepareStatement(sql);
+                ResultSet resultado = comando.executeQuery()) {
 
             if (resultado.next()) {
 
                 return resultado.getString(
-                        "mes_ano"
-                );
+                        "mes_ano");
             }
 
         } catch (Exception e) {
 
             System.out.println(
-                    "Erro ao buscar mês atual."
-            );
+                    "Erro ao buscar mês atual.");
 
             e.printStackTrace();
         }

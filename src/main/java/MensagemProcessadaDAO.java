@@ -12,7 +12,7 @@ public class MensagemProcessadaDAO {
                 """;
 
         try (Connection conexao = BancoDeDados.conectar();
-            PreparedStatement comando = conexao.prepareStatement(sql)) {
+                PreparedStatement comando = conexao.prepareStatement(sql)) {
 
             comando.setString(1, messageId);
 
@@ -23,8 +23,7 @@ public class MensagemProcessadaDAO {
         } catch (Exception e) {
 
             System.out.println(
-                    "Erro ao registrar mensagem processada."
-            );
+                    "Erro ao registrar mensagem processada.");
 
             e.printStackTrace();
 

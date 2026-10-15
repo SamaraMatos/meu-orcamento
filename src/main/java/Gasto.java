@@ -35,9 +35,8 @@ public class Gasto {
         return valor;
     }
 
-    public Categoria getCategoria(){
-        
+    public Categoria getCategoria() {
+
         return categoria;
     }
 }
-

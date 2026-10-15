@@ -14,7 +14,7 @@ public class OrcamentoDAO {
                 """;
 
         try (Connection conexao = BancoDeDados.conectar();
-            PreparedStatement comando = conexao.prepareStatement(sql)) {
+                PreparedStatement comando = conexao.prepareStatement(sql)) {
 
             comando.setDouble(1, valor);
 
@@ -34,8 +34,8 @@ public class OrcamentoDAO {
         String sql = "SELECT valor FROM orcamento WHERE id = 1";
 
         try (Connection conexao = BancoDeDados.conectar();
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            ResultSet resultado = comando.executeQuery()) {
+                PreparedStatement comando = conexao.prepareStatement(sql);
+                ResultSet resultado = comando.executeQuery()) {
 
             if (resultado.next()) {
 

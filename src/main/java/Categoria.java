@@ -3,22 +3,21 @@ public class Categoria {
     private int id;
     private String nome;
 
-    public Categoria(String categoria){
+    public Categoria(String categoria) {
         this.nome = categoria;
-}
+    }
 
-    public Categoria(int id, String categoria){
+    public Categoria(int id, String categoria) {
         this.id = id;
         this.nome = categoria;
-}
-    
-    public int getId(){
+    }
+
+    public int getId() {
         return id;
     }
 
-    public String getNome(){
+    public String getNome() {
         return nome;
     }
 
-    
 }
