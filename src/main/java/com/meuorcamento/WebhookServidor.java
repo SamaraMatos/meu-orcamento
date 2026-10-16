@@ -1,5 +1,13 @@
 package com.meuorcamento;
 
+import com.meuorcamento.dao.CategoriaDAO;
+import com.meuorcamento.dao.ControleMesDAO;
+import com.meuorcamento.dao.GastoDAO;
+import com.meuorcamento.dao.HistoricoGastoDAO;
+import com.meuorcamento.dao.HistoricoOrcamentoDAO;
+import com.meuorcamento.dao.MensagemProcessadaDAO;
+import com.meuorcamento.dao.OrcamentoDAO;
+import com.meuorcamento.dao.PlanejamentoDAO;
 import com.meuorcamento.modelo.Categoria;
 import com.meuorcamento.modelo.Gasto;
 import com.meuorcamento.modelo.Planejamento;

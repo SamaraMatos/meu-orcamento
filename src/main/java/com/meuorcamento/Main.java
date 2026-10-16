@@ -1,5 +1,8 @@
 package com.meuorcamento;
 
+import com.meuorcamento.dao.CategoriaDAO;
+import com.meuorcamento.dao.GastoDAO;
+import com.meuorcamento.dao.OrcamentoDAO;
 import com.meuorcamento.modelo.Categoria;
 import com.meuorcamento.modelo.Gasto;
 import com.meuorcamento.modelo.Orcamento;

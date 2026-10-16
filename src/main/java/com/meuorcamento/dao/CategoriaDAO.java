@@ -1,5 +1,6 @@
-package com.meuorcamento;
+package com.meuorcamento.dao;
 
+import com.meuorcamento.BancoDeDados;
 import com.meuorcamento.modelo.Categoria;
 
 import java.sql.Connection;

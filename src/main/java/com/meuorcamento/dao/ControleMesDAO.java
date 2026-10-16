@@ -1,4 +1,6 @@
-package com.meuorcamento;
+package com.meuorcamento.dao;
+
+import com.meuorcamento.BancoDeDados;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

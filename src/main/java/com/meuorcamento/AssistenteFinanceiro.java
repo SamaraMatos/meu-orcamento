@@ -1,5 +1,6 @@
 package com.meuorcamento;
 
+import com.meuorcamento.dao.GastoDAO;
 import com.meuorcamento.modelo.Gasto;
 
 import java.net.URI;

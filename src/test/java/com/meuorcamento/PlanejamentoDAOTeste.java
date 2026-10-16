@@ -2,7 +2,7 @@ package com.meuorcamento;
 
 import java.sql.SQLException;
 
-import com.meuorcamento.PlanejamentoDAO;
+import com.meuorcamento.dao.PlanejamentoDAO;
 
 public class PlanejamentoDAOTeste {
 
@@ -11,8 +11,7 @@ public class PlanejamentoDAOTeste {
 
         if (enderecoBanco != null && !enderecoBanco.isBlank()) {
             throw new IllegalStateException(
-                "Teste interrompido: existe uma DATABASE_URL configurada."
-            );
+                    "Teste interrompido: existe uma DATABASE_URL configurada.");
         }
 
         PlanejamentoDAO dao = new PlanejamentoDAO();
@@ -21,13 +20,11 @@ public class PlanejamentoDAOTeste {
             dao.buscarAtivos();
         } catch (SQLException e) {
             System.out.println(
-                "TESTE PASSOU: a falta de conexão gerou uma SQLException."
-            );
+                    "TESTE PASSOU: a falta de conexão gerou uma SQLException.");
             return;
         }
 
         throw new AssertionError(
-            "TESTE FALHOU: o método deveria ter lançado uma SQLException."
-        );
+                "TESTE FALHOU: o método deveria ter lançado uma SQLException.");
     }
 }

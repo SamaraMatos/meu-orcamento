@@ -1,7 +1,9 @@
-package com.meuorcamento;
+package com.meuorcamento.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+
+import com.meuorcamento.BancoDeDados;
 
 public class HistoricoOrcamentoDAO {
 
