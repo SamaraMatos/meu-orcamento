@@ -1,4 +1,8 @@
+package com.meuorcamento;
+
 import java.sql.SQLException;
+
+import com.meuorcamento.PlanejamentoDAO;
 
 public class PlanejamentoDAOTeste {
 

@@ -1,3 +1,5 @@
+package com.meuorcamento;
+
 import java.util.ArrayList;
 
 public class Orcamento {

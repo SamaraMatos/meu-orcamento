@@ -1,37 +1,42 @@
+package com.meuorcamento;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class OrcamentoDAO {
+public class ControleMesDAO {
 
-    public void salvar(double valor) {
+    public void salvar(String mesAno) {
 
         String sql = """
-                INSERT INTO orcamento (id, valor)
+                INSERT INTO controle_mes (id, mes_ano)
                 VALUES (1, ?)
                 ON CONFLICT(id)
-                DO UPDATE SET valor = excluded.valor
+                DO UPDATE SET mes_ano = excluded.mes_ano
                 """;
 
         try (Connection conexao = BancoDeDados.conectar();
                 PreparedStatement comando = conexao.prepareStatement(sql)) {
 
-            comando.setDouble(1, valor);
+            comando.setString(1, mesAno);
 
             comando.executeUpdate();
 
-            System.out.println("Orçamento salvo no banco!");
+            System.out.println(
+                    "Mês atual salvo no banco!");
 
         } catch (Exception e) {
 
-            System.out.println("Erro ao salvar orçamento.");
+            System.out.println(
+                    "Erro ao salvar mês atual.");
+
             e.printStackTrace();
         }
     }
 
-    public Double buscar() {
+    public String buscar() {
 
-        String sql = "SELECT valor FROM orcamento WHERE id = 1";
+        String sql = "SELECT mes_ano FROM controle_mes WHERE id = 1";
 
         try (Connection conexao = BancoDeDados.conectar();
                 PreparedStatement comando = conexao.prepareStatement(sql);
@@ -39,12 +44,15 @@ public class OrcamentoDAO {
 
             if (resultado.next()) {
 
-                return resultado.getDouble("valor");
+                return resultado.getString(
+                        "mes_ano");
             }
 
         } catch (Exception e) {
 
-            System.out.println("Erro ao buscar orçamento.");
+            System.out.println(
+                    "Erro ao buscar mês atual.");
+
             e.printStackTrace();
         }
 

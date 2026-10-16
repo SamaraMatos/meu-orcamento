@@ -1,40 +1,39 @@
+package com.meuorcamento;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class ControleMesDAO {
+public class OrcamentoDAO {
 
-    public void salvar(String mesAno) {
+    public void salvar(double valor) {
 
         String sql = """
-                INSERT INTO controle_mes (id, mes_ano)
+                INSERT INTO orcamento (id, valor)
                 VALUES (1, ?)
                 ON CONFLICT(id)
-                DO UPDATE SET mes_ano = excluded.mes_ano
+                DO UPDATE SET valor = excluded.valor
                 """;
 
         try (Connection conexao = BancoDeDados.conectar();
                 PreparedStatement comando = conexao.prepareStatement(sql)) {
 
-            comando.setString(1, mesAno);
+            comando.setDouble(1, valor);
 
             comando.executeUpdate();
 
-            System.out.println(
-                    "Mês atual salvo no banco!");
+            System.out.println("Orçamento salvo no banco!");
 
         } catch (Exception e) {
 
-            System.out.println(
-                    "Erro ao salvar mês atual.");
-
+            System.out.println("Erro ao salvar orçamento.");
             e.printStackTrace();
         }
     }
 
-    public String buscar() {
+    public Double buscar() {
 
-        String sql = "SELECT mes_ano FROM controle_mes WHERE id = 1";
+        String sql = "SELECT valor FROM orcamento WHERE id = 1";
 
         try (Connection conexao = BancoDeDados.conectar();
                 PreparedStatement comando = conexao.prepareStatement(sql);
@@ -42,15 +41,12 @@ public class ControleMesDAO {
 
             if (resultado.next()) {
 
-                return resultado.getString(
-                        "mes_ano");
+                return resultado.getDouble("valor");
             }
 
         } catch (Exception e) {
 
-            System.out.println(
-                    "Erro ao buscar mês atual.");
-
+            System.out.println("Erro ao buscar orçamento.");
             e.printStackTrace();
         }
 

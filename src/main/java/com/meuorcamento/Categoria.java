@@ -1,3 +1,5 @@
+package com.meuorcamento;
+
 public class Categoria {
 
     private int id;

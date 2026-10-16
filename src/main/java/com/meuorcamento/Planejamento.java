@@ -1,3 +1,5 @@
+package com.meuorcamento;
+
 public class Planejamento {
 
     private int id;

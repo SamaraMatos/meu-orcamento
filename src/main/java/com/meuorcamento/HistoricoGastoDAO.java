@@ -1,18 +1,18 @@
+package com.meuorcamento;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-public class HistoricoOrcamentoDAO {
+public class HistoricoGastoDAO {
 
         public void salvar(
                         String mesAno,
-                        double valor) {
+                        Gasto gasto) {
 
                 String sql = """
-                                INSERT INTO historico_orcamentos
-                                (mes_ano, valor)
-                                VALUES (?, ?)
-                                ON CONFLICT(mes_ano)
-                                DO UPDATE SET valor = excluded.valor
+                                INSERT INTO historico_gastos
+                                (mes_ano, descricao, valor, categoria_id)
+                                VALUES (?, ?, ?, ?)
                                 """;
 
                 try (Connection conexao = BancoDeDados.conectar();
@@ -22,27 +22,36 @@ public class HistoricoOrcamentoDAO {
                                         1,
                                         mesAno);
 
-                        comando.setDouble(
+                        comando.setString(
                                         2,
-                                        valor);
+                                        gasto.getDescricao());
+
+                        comando.setDouble(
+                                        3,
+                                        gasto.getValor());
+
+                        comando.setInt(
+                                        4,
+                                        gasto.getCategoria().getId());
 
                         comando.executeUpdate();
 
                         System.out.println(
-                                        "Orçamento salvo no histórico!");
+                                        "Gasto salvo no histórico!");
 
                 } catch (Exception e) {
 
                         System.out.println(
-                                        "Erro ao salvar orçamento no histórico.");
+                                        "Erro ao salvar gasto no histórico.");
 
                         e.printStackTrace();
                 }
         }
 
-        public boolean existe(String mesAno) {
+        public boolean excluirPorMes(
+                        String mesAno) {
 
-                String sql = "SELECT mes_ano FROM historico_orcamentos WHERE mes_ano = ?";
+                String sql = "DELETE FROM historico_gastos WHERE mes_ano = ?";
 
                 try (Connection conexao = BancoDeDados.conectar();
                                 PreparedStatement comando = conexao.prepareStatement(sql)) {
@@ -51,15 +60,17 @@ public class HistoricoOrcamentoDAO {
                                         1,
                                         mesAno);
 
-                        try (var resultado = comando.executeQuery()) {
+                        comando.executeUpdate();
 
-                                return resultado.next();
-                        }
+                        System.out.println(
+                                        "Histórico antigo do mês removido!");
+
+                        return true;
 
                 } catch (Exception e) {
 
                         System.out.println(
-                                        "Erro ao verificar histórico do orçamento.");
+                                        "Erro ao limpar histórico do mês.");
 
                         e.printStackTrace();
 
