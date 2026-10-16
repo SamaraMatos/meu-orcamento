@@ -1,4 +1,4 @@
-package com.meuorcamento;
+package com.meuorcamento.webhook;
 
 import com.meuorcamento.dao.CategoriaDAO;
 import com.meuorcamento.dao.ControleMesDAO;

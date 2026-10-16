@@ -16,4 +16,4 @@ WORKDIR /app
 COPY --from=build /app/target/classes ./classes
 COPY --from=build /app/dependency ./dependency
 
-CMD ["java", "-cp", "classes:dependency/*", "com.meuorcamento.WebhookServidor"]
+CMD ["java", "-cp", "classes:dependency/*", "com.meuorcamento.webhook.WebhookServidor"]

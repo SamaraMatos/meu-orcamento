@@ -1,8 +1,8 @@
 package com.meuorcamento.integracao;
 
-import com.meuorcamento.WebhookServidor;
 import com.meuorcamento.dao.GastoDAO;
 import com.meuorcamento.modelo.Gasto;
+import com.meuorcamento.webhook.WebhookServidor;
 
 import java.net.URI;
 import java.net.http.HttpClient;
