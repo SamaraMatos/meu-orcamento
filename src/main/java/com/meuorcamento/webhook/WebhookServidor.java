@@ -996,6 +996,14 @@ public class WebhookServidor {
                                 System.out.println(
                                                 "O valor do gasto deve ser maior que zero.");
 
+                                if (numeroRemetente != null) {
+
+                                        enviarMensagemWhatsApp(
+                                                        numeroRemetente,
+                                                        "⚠️ O valor do gasto deve ser maior que zero.\n"
+                                                                        + "Exemplo: Mercado 150 Casa");
+                                }
+
                                 return;
                         }
 
