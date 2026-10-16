@@ -1,5 +1,6 @@
-package com.meuorcamento;
+package com.meuorcamento.integracao;
 
+import com.meuorcamento.WebhookServidor;
 import com.meuorcamento.dao.GastoDAO;
 import com.meuorcamento.modelo.Gasto;
 
