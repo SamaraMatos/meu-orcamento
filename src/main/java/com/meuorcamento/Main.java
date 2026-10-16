@@ -1,5 +1,9 @@
 package com.meuorcamento;
 
+import com.meuorcamento.modelo.Categoria;
+import com.meuorcamento.modelo.Gasto;
+import com.meuorcamento.modelo.Orcamento;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 

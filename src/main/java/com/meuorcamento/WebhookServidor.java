@@ -1,5 +1,8 @@
 package com.meuorcamento;
 
+import com.meuorcamento.modelo.Categoria;
+import com.meuorcamento.modelo.Gasto;
+import com.meuorcamento.modelo.Planejamento;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;

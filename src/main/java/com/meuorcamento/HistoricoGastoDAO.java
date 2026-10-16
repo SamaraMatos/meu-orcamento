@@ -1,5 +1,7 @@
 package com.meuorcamento;
 
+import com.meuorcamento.modelo.Gasto;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 

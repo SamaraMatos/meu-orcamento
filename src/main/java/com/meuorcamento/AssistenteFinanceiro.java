@@ -1,5 +1,7 @@
 package com.meuorcamento;
 
+import com.meuorcamento.modelo.Gasto;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -7,6 +9,7 @@ import com.google.gson.Gson;
 import java.net.http.HttpResponse;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;

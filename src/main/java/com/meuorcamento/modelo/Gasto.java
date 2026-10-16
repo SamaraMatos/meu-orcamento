@@ -1,4 +1,4 @@
-package com.meuorcamento;
+package com.meuorcamento.modelo;
 
 public class Gasto {
 
