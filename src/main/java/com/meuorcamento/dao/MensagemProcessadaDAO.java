@@ -3,7 +3,7 @@ package com.meuorcamento.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import com.meuorcamento.BancoDeDados;
+import com.meuorcamento.infraestrutura.BancoDeDados;
 
 public class MensagemProcessadaDAO {
 

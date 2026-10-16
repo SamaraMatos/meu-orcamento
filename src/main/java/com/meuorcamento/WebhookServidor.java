@@ -8,6 +8,7 @@ import com.meuorcamento.dao.HistoricoOrcamentoDAO;
 import com.meuorcamento.dao.MensagemProcessadaDAO;
 import com.meuorcamento.dao.OrcamentoDAO;
 import com.meuorcamento.dao.PlanejamentoDAO;
+import com.meuorcamento.infraestrutura.BancoDeDados;
 import com.meuorcamento.modelo.Categoria;
 import com.meuorcamento.modelo.Gasto;
 import com.meuorcamento.modelo.Planejamento;

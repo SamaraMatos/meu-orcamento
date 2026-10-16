@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import com.meuorcamento.infraestrutura.BancoDeDados;
+
 public class MigrarDados {
 
         public static void main(String[] args) {

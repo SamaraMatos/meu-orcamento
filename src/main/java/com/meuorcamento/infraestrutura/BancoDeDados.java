@@ -1,4 +1,4 @@
-package com.meuorcamento;
+package com.meuorcamento.infraestrutura;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

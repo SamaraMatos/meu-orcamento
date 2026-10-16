@@ -1,6 +1,6 @@
 package com.meuorcamento.dao;
 
-import com.meuorcamento.BancoDeDados;
+import com.meuorcamento.infraestrutura.BancoDeDados;
 import com.meuorcamento.modelo.Planejamento;
 
 import java.sql.Connection;
