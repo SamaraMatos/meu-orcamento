@@ -1079,6 +1079,13 @@ public class WebhookServidor {
 
                 } catch (NumberFormatException e) {
 
+                        if (numeroRemetente != null) {
+                                enviarMensagemWhatsApp(
+                                                numeroRemetente,
+                                                "⚠️ Não consegui identificar o valor do gasto.\n"
+                                                                + "Exemplo: Mercado 150 Casa");
+                        }
+
                         System.out.println();
                         System.out.println(
                                         "A mensagem não está no formato esperado.");
