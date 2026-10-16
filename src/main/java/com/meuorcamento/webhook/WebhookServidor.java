@@ -974,6 +974,10 @@ public class WebhookServidor {
 
                 String[] partesMensagem = mensagemParaProcessar.trim().split("\\s+");
 
+                System.out.println(
+                                "Validacao do gasto: partes=" + partesMensagem.length
+                                                + ", remetente identificado=" + (numeroRemetente != null));
+
                 if (partesMensagem.length < 2) {
 
                         System.out.println();
