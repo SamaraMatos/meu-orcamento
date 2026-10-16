@@ -980,6 +980,13 @@ public class WebhookServidor {
                         System.out.println(
                                         "A mensagem não está no formato esperado.");
 
+                        if (numeroRemetente != null) {
+                                enviarMensagemWhatsApp(
+                                                numeroRemetente,
+                                                "⚠️ Informe a descrição e o valor do gasto.\n"
+                                                                + "Exemplo: Mercado 150 Casa");
+                        }
+
                         return;
                 }
 
