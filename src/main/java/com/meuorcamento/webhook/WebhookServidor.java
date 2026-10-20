@@ -1030,6 +1030,12 @@ public class WebhookServidor {
                                 System.out.println();
                                 System.out.println(
                                                 "A descrição do gasto não pode ficar vazia.");
+                                if (numeroRemetente != null) {
+                                        enviarMensagemWhatsApp(
+                                                        numeroRemetente,
+                                                        "⚠️ A descrição do gasto não pode ficar vazia.\n"
+                                                                        + "Exemplo: Mercado 150 Casa");
+                                }
 
                                 return;
                         }
