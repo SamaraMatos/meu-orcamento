@@ -1075,6 +1075,13 @@ public class WebhookServidor {
 
                                 System.out.println(
                                                 "Não foi possível salvar o gasto no banco.");
+
+                                if (numeroRemetente != null) {
+                                        enviarMensagemWhatsApp(
+                                                        numeroRemetente,
+                                                        "⚠️ Não consegui confirmar o cadastro do gasto.\n"
+                                                                        + "Consulte 'gastos' antes de tentar novamente para evitar duplicidade.");
+                                }
                         }
 
                 } catch (NumberFormatException e) {
