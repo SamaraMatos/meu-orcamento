@@ -1353,9 +1353,9 @@ public class WebhookServidor {
                                         + String.format(
                                                         "%.2f",
                                                         gasto.getValor())
-                                        + " - Categoria: "
+                                        + " ("
                                         + gasto.getCategoria().getNome()
-                                        + "\n";
+                                        + ")\n";
                 }
 
                 return resposta;
