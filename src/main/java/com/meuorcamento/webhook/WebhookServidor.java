@@ -1001,17 +1001,17 @@ public class WebhookServidor {
                         double valor = Double.parseDouble(
                                         ultimoItem.replace(",", "."));
 
-                        if (valor <= 0) {
+                        if (!valorGastoValido(valor)) {
 
                                 System.out.println();
                                 System.out.println(
-                                                "O valor do gasto deve ser maior que zero.");
+                                                "O valor do gasto deve ser finito e maior que zero.");
 
                                 if (numeroRemetente != null) {
 
                                         enviarMensagemWhatsApp(
                                                         numeroRemetente,
-                                                        "⚠️ O valor do gasto deve ser maior que zero.\n"
+                                                        "⚠️ Informe um valor numérico finito e maior que zero.\n"
                                                                         + "Exemplo: Mercado 150 Casa");
                                 }
 
@@ -1090,6 +1090,10 @@ public class WebhookServidor {
                         System.out.println(
                                         "A mensagem não está no formato esperado.");
                 }
+        }
+
+        static boolean valorGastoValido(double valor) {
+                return Double.isFinite(valor) && valor > 0;
         }
 
         private static void processarExclusao(
