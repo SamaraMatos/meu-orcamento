@@ -1067,6 +1067,8 @@ public class WebhookServidor {
                                                 + descricao
                                                 + " - R$ "
                                                 + String.format("%.2f", valor)
+                                                + "\nCategoria: "
+                                                + categoriaEncontrada.getNome()
                                                 + "\n"
                                                 + obterSaldo();
 
