@@ -1167,16 +1167,91 @@ public class WebhookServidor {
                 }
         }
 
+        static Categoria identificarCategoriaNoFinal(
+                        String mensagem,
+                        List<Categoria> categorias) {
+
+                Categoria encontrada = null;
+
+                for (Categoria categoria : categorias) {
+                        String nome = categoria.getNome();
+
+                        if (mensagem.toLowerCase(java.util.Locale.ROOT)
+                                        .endsWith(" " + nome.toLowerCase(java.util.Locale.ROOT))) {
+
+                                if (encontrada == null
+                                                || nome.length() > encontrada.getNome().length()) {
+                                        encontrada = categoria;
+                                }
+                        }
+                }
+
+                return encontrada;
+        }
+
         private static void processarEdicao(
                         String mensagem,
                         String numeroRemetente) {
 
-                String[] partes = mensagem.trim().split("\\s+");
+                String mensagemParaProcessar = mensagem.trim();
+
+                Categoria categoriaInformada = null;
+
+                CategoriaDAO categoriaDAO = new CategoriaDAO();
+                List<Categoria> categorias = categoriaDAO.buscarTodos();
+
+                String[] partesOriginais = mensagemParaProcessar.split("\\s+");
+                String ultimoItemOriginal = partesOriginais[partesOriginais.length - 1];
+
+                boolean terminaComNumero = false;
+
+                try {
+                        Double.parseDouble(ultimoItemOriginal.replace(",", "."));
+                        terminaComNumero = true;
+                } catch (NumberFormatException e) {
+                        // O último item não é um número; pode ser uma categoria.
+                }
+
+                if (!terminaComNumero) {
+                        categoriaInformada = identificarCategoriaNoFinal(
+                                        mensagemParaProcessar,
+                                        categorias);
+
+                        if (categoriaInformada != null) {
+                                mensagemParaProcessar = mensagemParaProcessar.substring(
+                                                0,
+                                                mensagemParaProcessar.length()
+                                                                - categoriaInformada.getNome().length())
+                                                .trim();
+                        }
+                }
+
+                if (!terminaComNumero && categoriaInformada == null) {
+                        if (numeroRemetente != null) {
+                                enviarMensagemWhatsApp(
+                                                numeroRemetente,
+                                                "⚠️ Não consegui identificar o valor ou a categoria.\n"
+                                                                + "Use 'categorias' para consultar os nomes disponíveis.\n"
+                                                                + "Exemplo: editar 102 hamburguer 61 Lanches");
+                        }
+
+                        return;
+                }
+
+                String[] partes = mensagemParaProcessar.split("\\s+");
 
                 if (partes.length < 4) {
 
                         System.out.println(
                                         "Formato inválido para edição.");
+
+                        if (numeroRemetente != null) {
+                                enviarMensagemWhatsApp(
+                                                numeroRemetente,
+                                                "⚠️ Informe o ID, a descrição e o valor do gasto.\n"
+                                                                + "Exemplo: editar 102 hamburguer 61\n"
+                                                                + "Para trocar a categoria: editar 102 hamburguer 61 Lanches");
+                        }
 
                         return;
                 }
@@ -1190,26 +1265,39 @@ public class WebhookServidor {
                         double valor = Double.parseDouble(
                                         ultimoItem.replace(",", "."));
 
-                        if (valor <= 0) {
-
+                        if (!valorGastoValido(valor)) {
                                 System.out.println(
-                                                "O valor do gasto deve ser maior que zero.");
+                                                "O valor do gasto deve ser finito e maior que zero.");
+
+                                if (numeroRemetente != null) {
+                                        enviarMensagemWhatsApp(
+                                                        numeroRemetente,
+                                                        "⚠️ Informe um valor numérico finito e maior que zero.\n"
+                                                                        + "Exemplo: editar 102 hamburguer 61 Lanches");
+                                }
 
                                 return;
                         }
 
-                        int inicioDescricao = mensagem.indexOf(partes[2]);
+                        String descricaoEValor = mensagemParaProcessar.split("\\s+", 3)[2];
 
-                        int posicaoValor = mensagem.lastIndexOf(ultimoItem);
+                        int posicaoValor = descricaoEValor.lastIndexOf(ultimoItem);
 
-                        String descricao = mensagem.substring(
-                                        inicioDescricao,
+                        String descricao = descricaoEValor.substring(
+                                        0,
                                         posicaoValor).trim();
 
                         if (descricao.isBlank()) {
 
                                 System.out.println(
                                                 "A descrição não pode ficar vazia.");
+
+                                if (numeroRemetente != null) {
+                                        enviarMensagemWhatsApp(
+                                                        numeroRemetente,
+                                                        "⚠️ A descrição do gasto não pode ficar vazia.\n"
+                                                                        + "Exemplo: editar 102 hamburguer 61 Lanches");
+                                }
 
                                 return;
                         }
@@ -1235,6 +1323,10 @@ public class WebhookServidor {
                         }
                         Categoria categoria = gastoAntigo.getCategoria();
 
+                        if (categoriaInformada != null) {
+                                categoria = categoriaInformada;
+                        }
+
                         Gasto gasto = new Gasto(
                                         id,
                                         descricao,
@@ -1254,14 +1346,15 @@ public class WebhookServidor {
                                                 + descricao
                                                 + " - R$ "
                                                 + String.format("%.2f", valor)
+                                                + "\nCategoria: "
+                                                + categoria.getNome()
                                                 + "\n"
                                                 + obterSaldo();
 
                         } else {
 
-                                resposta = "Não existe nenhum gasto com o ID "
-                                                + id
-                                                + ".";
+                                resposta = "⚠️ Não consegui confirmar a atualização do gasto.\n"
+                                                + "Consulte 'gastos' antes de tentar novamente.";
                         }
 
                         System.out.println();
@@ -1278,6 +1371,13 @@ public class WebhookServidor {
 
                         System.out.println(
                                         "ID ou valor inválido.");
+
+                        if (numeroRemetente != null) {
+                                enviarMensagemWhatsApp(
+                                                numeroRemetente,
+                                                "⚠️ O ID deve ser um número inteiro e o valor deve ser numérico.\n"
+                                                                + "Exemplo: editar 102 hamburguer 61 Lanches");
+                        }
                 }
         }
 
@@ -1535,8 +1635,10 @@ public class WebhookServidor {
                 resposta += "🗑️ excluir <ID>\n";
                 resposta += "Ex: excluir 26\n\n";
 
-                resposta += "✏️ editar <ID> <descrição> <valor>\n";
-                resposta += "Ex: editar 26 Mercado 150\n\n";
+                resposta += "✏️ editar <ID> <descrição> <valor> [categoria]\n";
+                resposta += "Ex: editar 26 Mercado 150\n";
+                resposta += "Para trocar a categoria: editar 26 Mercado 150 Casa\n";
+                resposta += "Sem categoria, mantém a atual.\n\n";
 
                 resposta += "💰 *ORÇAMENTO*\n";
                 resposta += "🔄 orcamento <valor>\n";

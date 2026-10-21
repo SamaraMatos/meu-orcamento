@@ -129,7 +129,7 @@ public class GastoDAO {
 
     public boolean atualizar(Gasto gasto) {
 
-        String sql = "UPDATE gastos SET descricao = ?, valor = ? WHERE id = ?";
+        String sql = "UPDATE gastos SET descricao = ?, valor = ?, categoria_id = ? WHERE id = ?";
 
         try (Connection conexao = BancoDeDados.conectar();
                 PreparedStatement comando = conexao.prepareStatement(sql)) {
@@ -144,6 +144,10 @@ public class GastoDAO {
 
             comando.setInt(
                     3,
+                    gasto.getCategoria().getId());
+
+            comando.setInt(
+                    4,
                     gasto.getId());
 
             int linhasAfetadas = comando.executeUpdate();
